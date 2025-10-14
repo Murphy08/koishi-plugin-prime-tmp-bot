@@ -1,6 +1,6 @@
 {
   "name": "koishi-plugin-prime-tmp-bot",
-  "description": "",
+  "description": "欧洲卡车模拟2 TMP查询插件 ;Prime Logistics 中国社区专用",
   "version": "0.0.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -13,10 +13,24 @@
   "keywords": [
     "chatbot",
     "koishi",
-    "plugin"
+    "plugin",
+    "truckersmp",
+    "gametool",
+    "ets2",
+    "tmp"
   ],
-  "devDependencies": {},
+  "koishi": {
+    "service": {
+      "required": [
+        "database"
+      ]
+    }
+  },
   "peerDependencies": {
     "koishi": "^4.18.7"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.13",
+    "js-md5": "^0.8.3"
   }
 }
