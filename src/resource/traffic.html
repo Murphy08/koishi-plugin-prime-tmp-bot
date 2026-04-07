@@ -1,92 +1,268 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title></title>
+  <title>Traffic Heatmap</title>
   <link href="./package/leaflet/leaflet.min.css" rel="stylesheet">
   <script src="./package/leaflet/leaflet.min.js"></script>
   <script src="./package/leaflet/heatmap.min.js"></script>
   <script src="./package/leaflet/leaflet-heatmap.js"></script>
   <style>
-    body, html {
+    @font-face {
+      font-family: 'segui-emj';
+      src: url('./package/SEGUIEMJ.TTF');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    :root {
+      --accent: #7A65DB;
+      --white: #ffffff;
+      --muted: rgba(255, 255, 255, 0.68);
+      --line: rgba(255, 255, 255, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
       margin: 0;
       padding: 0;
+      background:
+        radial-gradient(circle at top, rgba(122, 101, 219, 0.28), transparent 42%),
+        linear-gradient(180deg, #111111 0%, #000000 100%);
+      font-family: 'segui-emj', 'Segoe UI', sans-serif;
+      color: var(--white);
     }
-    * {
-      font-family: "微软雅黑", serif;
-    }
+
     #container {
-      width: 1000px;
       position: relative;
+      width: 1000px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(160deg, rgba(122, 101, 219, 0.22) 0%, rgba(122, 101, 219, 0.05) 28%, rgba(0, 0, 0, 0.97) 100%);
+      box-shadow:
+        0 24px 52px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
-    .map {
-      width: 100%;
-      height: 900px;
-      background-color: #4b4b4b;
+
+    #container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 24%),
+        linear-gradient(180deg, transparent, rgba(122, 101, 219, 0.12));
+      pointer-events: none;
     }
-    .traffic-box {
-      //position: absolute;
-      //bottom: 0;
-      //left: 0;
-      //z-index: 9999999;
-      width: 100%;
-      backdrop-filter: blur(3px);
-      background-color: #4b4b4b;
-      padding: 12px 16px;
-      box-sizing: border-box;
-      overflow-y: hidden;
-    }
-    .traffic-item {
-      color: #ffffff;
-      width: 33.3333%;
-      float: left;
-      margin-top: 8px;
-      font-size: 14px;
-      border-right: 1px solid rgba(255, 255, 255, 0.3);
-      box-sizing: border-box;
-      padding: 0 10px;
+
+    .page-header {
+      position: relative;
+      padding: 20px 22px 16px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
       display: flex;
-      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .page-header::after {
+      content: '';
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(122, 101, 219, 0.9), transparent);
+    }
+
+    .header-kicker {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .header-title {
+      margin-top: 12px;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.18;
+      letter-spacing: 0.02em;
+    }
+
+    .header-subtitle {
+      margin-top: 6px;
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .header-logo {
+      width: 62px;
+      height: 62px;
+      display: flex;
       align-items: center;
       justify-content: center;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow:
+        0 12px 26px rgba(122, 101, 219, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
     }
-    .traffic-item:nth-child(-n+3) {
+
+    .header-logo img {
+      width: 46px;
+      height: 46px;
+      object-fit: contain;
+    }
+
+    .map-shell {
+      padding: 16px;
+    }
+
+    .map {
+      width: 100%;
+      height: 820px;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.24);
+      overflow: hidden;
+      box-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .traffic-section {
+      padding: 0 16px 16px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding: 0 4px;
+    }
+
+    .section-title {
+      color: var(--white);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .section-note {
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .traffic-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .traffic-item {
+      width: calc(33.3333% - 6.7px);
+      min-height: 62px;
       margin-top: 0;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
-    .traffic-item:last-child, .traffic-item:nth-child(3n) {
-      border-right: 0;
-    }
-    .traffic-item .region-info {
-      display: inline-block;
-      width: 72%;
+
+    .region-info {
+      flex: 1;
+      min-width: 0;
+      width: auto;
+      color: var(--white);
+      font-size: 14px;
+      line-height: 1.5;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .traffic-item .player-count {
-      display: inline-block;
-      width: 16%;
+
+    .region-info strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .player-count {
+      min-width: 88px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(122, 101, 219, 0.16);
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 12px;
       text-align: center;
     }
-    .traffic-item .traffic-status {
-      display: inline-block;
-      width: 12%;
+
+    .traffic-status {
+      min-width: 78px;
+      font-size: 13px;
+      font-weight: 700;
       text-align: right;
+    }
+
+    .leaflet-container {
+      background: rgba(0, 0, 0, 0.3);
     }
   </style>
 </head>
 <body>
   <div id="container">
-    <div id="map" class="map"></div>
-    <div class="traffic-box"></div>
+    <div class="page-header">
+      <div>
+        <div class="header-kicker">Prime Logistics</div>
+        <div class="header-title">Traffic Heatmap</div>
+        <div class="header-subtitle">Prime Logistics road activity overview</div>
+      </div>
+      <div class="header-logo">
+        <img src="./package/img/logo2.png" alt="Logo">
+      </div>
+    </div>
+
+    <div class="map-shell">
+      <div id="map" class="map"></div>
+    </div>
+
+    <div class="traffic-section">
+      <div class="section-head">
+        <div class="section-title">Hot Regions</div>
+        <div class="section-note">Live congestion overview</div>
+      </div>
+      <div class="traffic-box"></div>
+    </div>
   </div>
+
   <script>
     let mapConfig = {
       ets: {
         tileUrl: 'https://ets-map.oss-cn-beijing.aliyuncs.com/ets2/05102019/{z}/{x}/{y}.png',
         multipliers: {
-          x: 71282,
-          y: 56532
+          x: 70272,
+          y: 76157
         },
         breakpoints: {
           uk: {
@@ -100,11 +276,10 @@
         },
         maxZoom: 8,
         minZoom: 2,
-        // 游戏地转地图坐标
-        calculateMapCoordinate (x, y) {
+        calculateMapCoordinate(x, y) {
           return [
-            x / 1.325928 + mapConfig.ets.multipliers.x,
-            y / 1.325928 + mapConfig.ets.multipliers.y
+            x / 1.609055 + mapConfig.ets.multipliers.x,
+            y / 1.609055 + mapConfig.ets.multipliers.y
           ];
         }
       },
@@ -126,38 +301,38 @@
         },
         maxZoom: 8,
         minZoom: 2,
-        // 游戏地转地图坐标
-        calculateMapCoordinate (x, y) {
+        calculateMapCoordinate(x, y) {
           return [
             x / 2.598541 + mapConfig.promods.multipliers.x,
             y / 2.598541 + mapConfig.promods.multipliers.y
-          ]
+          ];
         }
       }
-    }
+    };
 
-    // 定义地图
     let map = L.map('map', {
       attributionControl: false,
       crs: L.CRS.Simple,
-      zoomControl: false
+      zoomControl: false,
+      zoomSnap: 0.1
     });
 
     function setData(data) {
-      // 边界
       let bounds = L.latLngBounds(
         map.unproject([0, mapConfig[data.mapType].bounds.y], mapConfig[data.mapType].maxZoom),
         map.unproject([mapConfig[data.mapType].bounds.x, 0], mapConfig[data.mapType].maxZoom)
       );
 
-      // 瓦片地图
       L.tileLayer(mapConfig[data.mapType].tileUrl, {
-        minZoom: 1,
+        minZoom: 0,
         maxZoom: 8,
+        minNativeZoom: 1,
+        maxNativeZoom: 8,
         tileSize: 512,
         bounds: bounds,
         reuseTiles: true
       }).addTo(map);
+
       map.setMaxBounds(
         new L.LatLngBounds(
           map.unproject([0, mapConfig[data.mapType].bounds.y], mapConfig[data.mapType].maxZoom),
@@ -165,36 +340,46 @@
         )
       );
 
-      // 展示地图全貌
-      map.fitBounds(bounds)
+      map.fitBounds(bounds);
 
-      // 热力图
       let heatmapLayer = new HeatmapOverlay({
         radius: 3,
-        maxOpacity: 0.8,
+        maxOpacity: 0.85,
         scaleRadius: true,
         useLocalExtrema: true,
-        latField: "lat",
-        lngField: "lng",
-        valueField: "count"
+        latField: 'lat',
+        lngField: 'lng',
+        valueField: 'count',
+        gradient: {
+          0.2: 'rgba(255, 255, 255, 0.15)',
+          0.4: '#7A65DB',
+          0.7: '#9D8CFF',
+          1.0: '#FFFFFF'
+        }
       });
       map.addLayer(heatmapLayer);
-      let heatmapData = []
-      for (const arrayElement of data.playerCoordinateList) {
-        let unprojected = map.unproject(mapConfig[data.mapType].calculateMapCoordinate(arrayElement[0], arrayElement[1]), 8);
+
+      let heatmapData = [];
+      for (const coordinate of data.playerCoordinateList) {
+        let unprojected = map.unproject(mapConfig[data.mapType].calculateMapCoordinate(coordinate[0], coordinate[1]), 8);
         heatmapData.push({ lat: unprojected.lat, lng: unprojected.lng, count: 1 });
       }
+
       heatmapLayer.setData({
         min: 1,
         max: 5000,
         data: heatmapData
-      })
+      });
 
-      // 展示热门地区路况状态
+      const trafficBox = document.getElementsByClassName('traffic-box')[0];
+      trafficBox.innerHTML = '';
+
       for (const traffic of data.trafficList) {
-        document.getElementsByClassName('traffic-box')[0].insertAdjacentHTML('beforeend', `
+        trafficBox.insertAdjacentHTML('beforeend', `
           <div class="traffic-item">
-            <span class="region-info"><strong>${traffic.country}</strong> ${traffic.province}</span><span class="player-count">${traffic.playerCount}人</span><span class="traffic-status" style="color: ${traffic.severity.color}">${traffic.severity.text}</span>
+            <span class="region-info"><strong>${traffic.country}</strong>${traffic.province}</span>
+            <span class="player-count">${traffic.playerCount} players</span>
+            <span class="traffic-status" style="color: ${traffic.severity.color}">${traffic.severity.text}</span>
           </div>
         `);
       }

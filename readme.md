@@ -1,6 +1,6 @@
-# koishi-plugin-prime-tmp-bot
+# koishi-plugin-tmp-bot
 
-[![npm](https://img.shields.io/npm/v/koishi-plugin-tmp-bot?style=flat-square)](https://www.npmjs.com/package/koishi-plugin-prime-tmp-bot)
+[![npm](https://img.shields.io/npm/v/koishi-plugin-tmp-bot?style=flat-square)](https://www.npmjs.com/package/koishi-plugin-tmp-bot)
 
 欧洲卡车模拟2 TMP查询机器人
 
@@ -17,9 +17,11 @@
 | tmpdlcmap              | 地图DLC列表                                                                                                                                     | tmpdlcmap              |
 | tmpmileageranking      | 总里程排行榜，数据从 2025年8月23日20:00 开始统计，绑定ID后可查看自己的排名                                                                                               | tmpmileageranking      |
 | tmptodaymileageranking | 今日里程排行榜，每日0点重置数据，绑定ID后可查看自己的排名                                                                                                              | tmptodaymileageranking |
+| tmpfootprints          | 今日足迹，查询除P服外的所有服务器足迹                                                                                                                         | tmpfootprints 123      |
+| tmpfootprintp          | 今日足迹，查询P和PA服的足迹                                                                                                                             | tmpfootprintp 123      |
 
 ### TMP数据接口文档
 https://apifox.com/apidoc/shared/38508a88-5ff4-4b29-b724-41f9d3d3336a
 
 ### 已部署的机器人
-本代码源自作者@79887143
+如不会部署，可直接使用此机器人 => QQ:3523283907

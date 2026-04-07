@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Player Profile</title>
   <link href="./package/leaflet/leaflet.min.css" rel="stylesheet">
   <script src="./package/leaflet/leaflet.min.js"></script>
   <style>
@@ -12,214 +12,361 @@
       font-weight: normal;
       font-style: normal;
     }
-    body {
-      font-family: 'segui-emj', 'sans-serif';
+
+    :root {
+      --accent: #7A65DB;
+      --accent-soft: rgba(122, 101, 219, 0.18);
+      --accent-strong: rgba(122, 101, 219, 0.34);
+      --black: #000000;
+      --white: #ffffff;
+      --muted: rgba(255, 255, 255, 0.68);
+      --line: rgba(255, 255, 255, 0.12);
+      --panel: rgba(255, 255, 255, 0.06);
+      --danger-soft: rgba(255, 110, 110, 0.18);
+      --danger-line: rgba(255, 110, 110, 0.32);
     }
 
-    .border {
-      border: 1px solid red;
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background:
+        radial-gradient(circle at top, rgba(122, 101, 219, 0.28), transparent 42%),
+        linear-gradient(180deg, #111111 0%, #000000 100%);
+      font-family: 'segui-emj', 'Segoe UI', sans-serif;
+      color: var(--white);
     }
 
     #container {
-      padding-bottom: 16px;
+      position: relative;
+      width: 420px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(160deg, rgba(122, 101, 219, 0.22) 0%, rgba(122, 101, 219, 0.05) 30%, rgba(0, 0, 0, 0.97) 100%);
+      box-shadow:
+        0 22px 48px rgba(0, 0, 0, 0.52),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    #container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 24%),
+        linear-gradient(180deg, transparent, rgba(122, 101, 219, 0.12));
+      pointer-events: none;
+    }
+
+    .page-header {
+      position: relative;
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+    }
+
+    .page-header::after {
+      content: '';
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(122, 101, 219, 0.9), transparent);
+    }
+
+    .page-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .header-kicker {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .header-logo {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow:
+        0 12px 26px rgba(122, 101, 219, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .header-logo img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+    }
+
+    .header-title {
+      margin-top: 14px;
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.18;
+      letter-spacing: 0.02em;
+    }
+
+    .header-subtitle {
+      margin-top: 6px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .profile-card {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      border: 1px solid rgba(122, 101, 219, 0.35);
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(122, 101, 219, 0.24), rgba(255, 255, 255, 0.04));
+      box-shadow:
+        0 14px 30px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .avatar {
+      width: 72px;
+      height: 72px;
+      flex-shrink: 0;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.05);
+      object-fit: cover;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+    }
+
+    .info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .name {
+      color: var(--white);
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tmp-id {
+      margin-top: 8px;
+      color: rgba(255, 255, 255, 0.62);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .tmp-id .group {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 8px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
+    }
+
+    .content {
+      position: relative;
+      padding: 14px;
+    }
+
+    .section {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .section:first-child {
+      margin-top: 0;
+    }
+
+    .section-title {
+      margin-bottom: 12px;
+      color: rgba(255, 255, 255, 0.64);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
 
     .form-box {
-      display: flex;
-      flex-wrap: wrap;
-    }
-    .form-box .form-item {
-      width: 50%;
-    }
-    .form-box .form-item.full {
-      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
     }
 
-    #container {
-      width: 400px;
-      background: linear-gradient(135deg, #1f2f54, #0f2c2a);
+    .form-item {
+      min-width: 0;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.28);
+    }
+
+    .form-item.full {
+      grid-column: 1 / -1;
+    }
+
+    .label {
+      margin-bottom: 6px;
+      color: rgba(255, 255, 255, 0.54);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .value {
+      color: var(--white);
+      font-size: 15px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .position-header,
+    .ban-header {
+      margin-bottom: 12px;
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    #map {
+      width: 100%;
+      height: 170px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.28);
       overflow: hidden;
     }
 
-    .header {
-      height: 100px;
-      background-color: rgba(0, 0, 0, .1);
-      display: flex;
-      align-items: center;
-      padding: 0 26px;
-      box-shadow: 0 0 16px rgba(0, 0, 0, .4);
-    }
-    .header .avatar {
-      width: 64px;
-      height: 64px;
-    }
-    .header .info {
-      flex: 1;
-      padding-left: 16px;
-    }
-    .header .info .name {
-      color: #b0c7ff;
-      font-size: 18px;
-      font-weight: 600;
-    }
-    .header .info .tmp-id {
-      color: #aaaaaa;
-      font-size: 14px;
-      margin-top: 4px;
-    }
-    .header .info .group {
-      color: #ffffff;
-      font-size: 12px;
-      padding: 2px 4px;
-      margin-left: 6px;
-      border-radius: 4px;
-      text-shadow: 0 4px 4px rgba(0, 0, 0, 0.8),
-                    0 -4px 4px rgba(0, 0, 0, 0.8);
-    }
-
-    .details-container {
-      padding: 16px 20px 0 20px;
-    }
-    .details-container .form-item {
-      background-color: rgba(0, 0, 0, 0.2);
-      box-sizing: border-box;
-    }
-    .details-container .form-item:nth-child(1) {
-      margin-top: 0;
-    }
-    .details-container .form-item .label {
-      color: #dddddd;
-      background-color: rgba(0, 0, 0, 0.2);
-      padding: 4px 8px;
-    }
-    .details-container .form-item .value {
-      color: #ffffff;
-      padding: 4px 8px;
-    }
-
     .ban-container {
-      margin: 16px 20px 0 20px;
-      background-color: rgba(227, 92, 92, 0.3);
+      border-color: var(--danger-line);
+      background: linear-gradient(180deg, rgba(255, 110, 110, 0.16), rgba(255, 255, 255, 0.03));
     }
-    .ban-header {
-      width: 100%;
-      height: 30px;
-      box-sizing: border-box;
-      padding: 0 12px;
-      color: #ffffff;
-      font-size: 14px;
-      line-height: 30px;
-      background-color: rgba(227, 92, 92, 0.6);
-    }
-    .ban-body {
-      padding: 12px 16px;
-    }
-    .ban-body .ban-hidden {
-      color: #cccccc;
+
+    .ban-hidden {
+      padding: 18px 12px;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.22);
+      color: rgba(255, 255, 255, 0.62);
       font-size: 14px;
       font-style: italic;
       text-align: center;
     }
-    .ban-body .form-item {
-      margin-top: 8px;
-    }
-    .ban-body .form-item:nth-child(1),
-    .ban-body .form-item:nth-child(2) {
-      margin-top: 0;
-    }
-    .ban-body .form-item .label {
-      color: #f3f3f3;
-      font-size: 12px;
-    }
-    .ban-body .form-item .value {
-      color: #eeeeee;
-      font-size: 14px;
-      word-wrap: break-word;
-      word-break: break-all;
-    }
 
-    .position-container {
-      margin: 16px 20px;
-    }
-    .position-container .position-header {
-      width: 100%;
-      height: 30px;
-      box-sizing: border-box;
-      padding: 0 12px;
-      color: #ffffff;
-      font-size: 14px;
-      line-height: 30px;
-      background-color: rgba(0, 0, 0, 0.4);
-    }
-    .position-container #map {
-      width: 100%;
-      height: 150px;
-      background-color: rgba(0, 0, 0, 0.25);
+    .leaflet-container {
+      background: rgba(0, 0, 0, 0.3);
     }
   </style>
 </head>
 <body>
   <div id="container">
-    <div class="header">
-      <img class="avatar" id="tmp-avatar" src="" alt="avatar"/>
-      <div class="info">
-        <div class="name" id="tmp-name">-</div>
-        <div class="tmp-id" id="tmp-id"></div>
+    <div class="page-header">
+      <div class="page-header-top">
+        <div class="header-kicker">Prime Logistics</div>
+        <div class="header-logo">
+          <img src="./package/img/logo2.png" alt="Logo">
+        </div>
       </div>
-    </div>
-    <div class="details-container">
-      <div class="form-box">
-        <div class="form-item full">
-          <div class="label">🎮SteamID</div>
-          <div class="value" id="tmp-steam-id"></div>
-        </div>
-        <div class="form-item full">
-          <div class="label">📑注册日期</div>
-          <div class="value" id="tmp-register-date"></div>
-        </div>
-        <div class="form-item full" id="tmp-vtc-box">
-          <div class="label">🚚所属车队</div>
-          <div class="value" id="tmp-vtc-name"></div>
-        </div>
-        <div class="form-item full" id="tmp-vtc-role-box">
-          <div class="label">🚚车队角色</div>
-          <div class="value" id="tmp-vtc-role"></div>
-        </div>
-        <div class="form-item" id="tmp-sponsor-box">
-          <div class="label">🎁赞助用户</div>
-          <div class="value" id="tmp-sponsor-amount"></div>
-        </div>
-        <div class="form-item" id="tmp-sponsor-cumulative-box">
-          <div class="label">🎁累计赞助</div>
-          <div class="value" id="tmp-sponsor-cumulative"></div>
+      <div class="header-title">Player Profile</div>
+      <div class="header-subtitle">Prime Logistics TMP profile lookup</div>
+      <div class="profile-card">
+        <img class="avatar" id="tmp-avatar" src="" alt="avatar">
+        <div class="info">
+          <div class="name" id="tmp-name">-</div>
+          <div class="tmp-id" id="tmp-id"></div>
         </div>
       </div>
     </div>
-    <div class="position-container" id="position-box">
-      <div class="position-header" id="position-title"></div>
-      <div id="map"></div>
-    </div>
-    <div class="ban-container" id="ban-box">
-      <div class="ban-header">封禁中</div>
-      <div class="ban-body">
-        <div class="ban-hidden" id="ban-hidden-box">玩家隐藏信息</div>
+
+    <div class="content">
+      <div class="section details-container">
+        <div class="section-title">Account Details</div>
+        <div class="form-box">
+          <div class="form-item full">
+            <div class="label">Steam ID</div>
+            <div class="value" id="tmp-steam-id"></div>
+          </div>
+          <div class="form-item full">
+            <div class="label">Register Date</div>
+            <div class="value" id="tmp-register-date"></div>
+          </div>
+          <div class="form-item full" id="tmp-vtc-box">
+            <div class="label">VTC</div>
+            <div class="value" id="tmp-vtc-name"></div>
+          </div>
+          <div class="form-item full" id="tmp-vtc-role-box">
+            <div class="label">VTC Role</div>
+            <div class="value" id="tmp-vtc-role"></div>
+          </div>
+          <div class="form-item" id="tmp-sponsor-box">
+            <div class="label">Sponsor</div>
+            <div class="value" id="tmp-sponsor-amount"></div>
+          </div>
+          <div class="form-item" id="tmp-sponsor-cumulative-box">
+            <div class="label">Sponsor Total</div>
+            <div class="value" id="tmp-sponsor-cumulative"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section position-container" id="position-box">
+        <div class="position-header" id="position-title"></div>
+        <div id="map"></div>
+      </div>
+
+      <div class="section ban-container" id="ban-box">
+        <div class="ban-header">Ban Record</div>
+        <div class="ban-hidden" id="ban-hidden-box">This player has hidden ban details.</div>
         <div class="form-box" id="ban-info-box">
           <div class="form-item">
-            <div class="label">截止时间</div>
+            <div class="label">Until</div>
             <div class="value" id="ban-until"></div>
           </div>
           <div class="form-item">
-            <div class="label">封禁次数</div>
+            <div class="label">Count</div>
             <div class="value" id="ban-count"></div>
           </div>
           <div class="form-item full">
-            <div class="label">原因</div>
+            <div class="label">Reason</div>
             <div class="value" id="ban-reason"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
   <script>
     let mapConfig = {
       ets: {
@@ -240,8 +387,7 @@
         },
         maxZoom: 8,
         minZoom: 2,
-        // 游戏地转地图坐标
-        calculateMapCoordinate (x, y) {
+        calculateMapCoordinate(x, y) {
           return [
             x / 1.325928 + mapConfig.ets.multipliers.x,
             y / 1.325928 + mapConfig.ets.multipliers.y
@@ -266,71 +412,71 @@
         },
         maxZoom: 8,
         minZoom: 2,
-        // 游戏地转地图坐标
-        calculateMapCoordinate (x, y) {
+        calculateMapCoordinate(x, y) {
           return [
             x / 2.598541 + mapConfig.promods.multipliers.x,
             y / 2.598541 + mapConfig.promods.multipliers.y
-          ]
+          ];
         }
       }
-    }
+    };
 
     function init(data) {
-      document.getElementById('tmp-name').innerText = data.name
-      document.getElementById('tmp-avatar').src = data.avatarUrl
-        document.getElementById('tmp-id').innerHTML = `TMP#${data.tmpId} <span class="group" style="background-color: #${data.groupColor}">${data.groupName}</span>`
-      document.getElementById('tmp-steam-id').innerText = data.steamId
-      document.getElementById('tmp-register-date').innerText = data.registerDate
+      document.getElementById('tmp-name').innerText = data.name;
+      document.getElementById('tmp-avatar').src = data.avatarUrl;
+      document.getElementById('tmp-id').innerHTML = `TMP#${data.tmpId} <span class="group" style="background-color: #${data.groupColor}">${data.groupName}</span>`;
+      document.getElementById('tmp-steam-id').innerText = data.steamId;
+      document.getElementById('tmp-register-date').innerText = data.registerDate;
+
       if (data.isJoinVtc) {
-        document.getElementById('tmp-vtc-name').innerText = data.vtcName
-        document.getElementById('tmp-vtc-role').innerText = data.vtcRole
+        document.getElementById('tmp-vtc-name').innerText = data.vtcName;
+        document.getElementById('tmp-vtc-role').innerText = data.vtcRole;
       } else {
-        document.getElementById('tmp-vtc-box').remove()
-        document.getElementById('tmp-vtc-role-box').remove()
+        document.getElementById('tmp-vtc-box').remove();
+        document.getElementById('tmp-vtc-role-box').remove();
       }
+
       if (data.isSponsor && !data.sponsorHide) {
-        document.getElementById('tmp-sponsor-amount').innerText = '$' + Math.floor(data.sponsorAmount / 100)
-        document.getElementById('tmp-sponsor-cumulative').innerText = '$' + Math.floor(data.sponsorCumulativeAmount / 100)
+        document.getElementById('tmp-sponsor-amount').innerText = '$' + Math.floor(data.sponsorAmount / 100);
+        document.getElementById('tmp-sponsor-cumulative').innerText = '$' + Math.floor(data.sponsorCumulativeAmount / 100);
       } else {
-        document.getElementById('tmp-sponsor-box').remove()
-        document.getElementById('tmp-sponsor-cumulative-box').remove()
+        document.getElementById('tmp-sponsor-box').remove();
+        document.getElementById('tmp-sponsor-cumulative-box').remove();
       }
+
       if (data.isOnline) {
-        document.getElementById('position-title').innerText = `${data.onlineServerName} · ${data.onlineCountry}-${data.onlineCity}`
-        map(data.onlineMapType, data.onlineX, data.onlineY)
+        document.getElementById('position-title').innerText = `${data.onlineServerName} | ${data.onlineCountry} - ${data.onlineCity}`;
+        map(data.onlineMapType, data.onlineX, data.onlineY);
       } else {
-        document.getElementById('position-box').remove()
+        document.getElementById('position-box').remove();
       }
+
       if (data.isBan) {
         if (data.banHide) {
-          document.getElementById('ban-info-box').remove()
+          document.getElementById('ban-info-box').remove();
         } else {
-          document.getElementById('ban-hidden-box').remove()
-          document.getElementById('ban-until').innerText = (data.banUntil || '永久')
-          document.getElementById('ban-count').innerText = (data.banCount || 0) + '次'
-          document.getElementById('ban-reason').innerText = data.banReasonZh || data.banReason
+          document.getElementById('ban-hidden-box').remove();
+          document.getElementById('ban-until').innerText = data.banUntil || 'Permanent';
+          document.getElementById('ban-count').innerText = (data.banCount || 0) + ' bans';
+          document.getElementById('ban-reason').innerText = data.banReasonZh || data.banReason;
         }
       } else {
-        document.getElementById('ban-box').remove()
+        document.getElementById('ban-box').remove();
       }
     }
 
     function map(mapType, x, y) {
-      // 定义地图
       let map = L.map('map', {
         attributionControl: false,
         crs: L.CRS.Simple,
         zoomControl: false
       });
 
-      // 边界
       let bounds = L.latLngBounds(
         map.unproject([0, mapConfig[mapType].bounds.y], mapConfig[mapType].maxZoom),
         map.unproject([mapConfig[mapType].bounds.x, 0], mapConfig[mapType].maxZoom)
       );
 
-      // 瓦片地图
       L.tileLayer(mapConfig[mapType].tileUrl, {
         minZoom: 2,
         maxZoom: 10,
@@ -339,6 +485,7 @@
         bounds: bounds,
         reuseTiles: true
       }).addTo(map);
+
       map.setMaxBounds(
         new L.LatLngBounds(
           map.unproject([0, mapConfig[mapType].bounds.y], mapConfig[mapType].maxZoom),
@@ -347,15 +494,13 @@
       );
 
       L.circleMarker(map.unproject(mapConfig[mapType].calculateMapCoordinate(x, y), 8), {
-        color: '#2f2f2f',       // 标记点边框颜色
-        weight: 2,              // 标记点边框大小
-        fillColor: '#1cb715',   // 标记点填充颜色
-        fillOpacity: 1,         // 标记点填充不透明度（0到1之间的值）
-        radius: 5,              // 标记点半径（以像素为单位）
-        zIndex: 1000
+        color: '#ffffff',
+        weight: 2,
+        fillColor: '#7A65DB',
+        fillOpacity: 1,
+        radius: 6
       }).addTo(map);
 
-      // 设置中心点
       map.setView(map.unproject(mapConfig[mapType].calculateMapCoordinate(x, y), 8), 5);
     }
   </script>

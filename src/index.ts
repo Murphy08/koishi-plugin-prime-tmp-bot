@@ -1,7 +1,7 @@
 import { Context, Schema } from 'koishi'
 const model = require('./database/model')
 const { MileageRankingType } = require('./util/constant')
-const tmpQuery = require('./command/tmpQuery/tmpQuery')
+const tmpQuery = require('./command/tmpQuery')
 const tmpServer = require('./command/tmpServer')
 const tmpBind = require('./command/tmpBind')
 const tmpTraffic = require('./command/tmpTraffic/tmpTraffic')
@@ -9,6 +9,8 @@ const tmpPosition = require('./command/tmpPosition')
 const tmpVersion = require('./command/tmpVersion')
 const tmpDlcMap = require('./command/tmpDlcMap')
 const tmpMileageRanking = require('./command/tmpMileageRanking')
+const tmpFootprint = require('./command/tmpFootprint')
+const { ServerType } = require('./util/constant')
 
 export const name = 'tmp-bot'
 export const inject = {
@@ -39,8 +41,8 @@ export const Config: Schema<Config> = Schema.intersect([
     tmpQueryType: Schema.union([
       Schema.const(1).description('文字'),
       Schema.const(2).description('图片')
-    ]).default(1).description('玩家信息展示方式'),
-  }).description('指令配置'),
+    ]).default(1).description('查询信息展示方式')
+  }).description('指令配置')
 ])
 
 export function apply(ctx: Context, cfg: Config) {
@@ -57,4 +59,6 @@ export function apply(ctx: Context, cfg: Config) {
   ctx.command('tmpdlcmap').action(async ({ session }) => await tmpDlcMap(ctx, session))
   ctx.command('tmpmileageranking').action(async ({ session }) => await tmpMileageRanking(ctx, session, MileageRankingType.total))
   ctx.command('tmptodaymileageranking').action(async ({ session }) => await tmpMileageRanking(ctx, session, MileageRankingType.today))
+  ctx.command('tmpfootprints').action(async ({ session }, tmpId) => await tmpFootprint(ctx, session, ServerType.ets, tmpId))
+  ctx.command('tmpfootprintp').action(async ({ session }, tmpId) => await tmpFootprint(ctx, session, ServerType.promods, tmpId))
 }
