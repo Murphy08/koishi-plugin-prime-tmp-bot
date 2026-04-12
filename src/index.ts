@@ -1,4 +1,16 @@
 import { Context, Schema } from 'koishi'
+const model = require('./database/model')
+const { MileageRankingType } = require('./util/constant')
+const tmpQuery = require('./command/tmpQuery')
+const tmpServer = require('./command/tmpServer')
+const tmpBind = require('./command/tmpBind')
+const tmpTraffic = require('./command/tmpTraffic/tmpTraffic')
+const tmpPosition = require('./command/tmpPosition')
+const tmpVersion = require('./command/tmpVersion')
+const tmpDlcMap = require('./command/tmpDlcMap')
+const tmpMileageRanking = require('./command/tmpMileageRanking')
+const tmpFootprint = require('./command/tmpFootprint')
+const { ServerType } = require('./util/constant')
 
 require('./util/logger')
 
