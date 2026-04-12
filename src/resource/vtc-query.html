@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VTC Profile</title>
+  <style>
+    @font-face {
+      font-family: 'segui-emj';
+      src: url('./package/SEGUIEMJ.TTF');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    :root {
+      --white: #ffffff;
+      --muted: rgba(255, 255, 255, 0.68);
+      --line: rgba(255, 255, 255, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background:
+        radial-gradient(circle at top, rgba(122, 101, 219, 0.28), transparent 42%),
+        linear-gradient(180deg, #111111 0%, #000000 100%);
+      font-family: 'segui-emj', 'Segoe UI', sans-serif;
+      color: var(--white);
+    }
+
+    #container {
+      position: relative;
+      width: 420px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(160deg, rgba(122, 101, 219, 0.22) 0%, rgba(122, 101, 219, 0.05) 30%, rgba(0, 0, 0, 0.97) 100%);
+      box-shadow:
+        0 22px 48px rgba(0, 0, 0, 0.52),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    #container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 24%),
+        linear-gradient(180deg, transparent, rgba(122, 101, 219, 0.12));
+      pointer-events: none;
+    }
+
+    .page-header {
+      position: relative;
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+    }
+
+    .page-header::after {
+      content: '';
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(122, 101, 219, 0.9), transparent);
+    }
+
+    .page-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .header-kicker {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .header-logo {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow:
+        0 12px 26px rgba(122, 101, 219, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .header-logo img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+    }
+
+    .header-title {
+      margin-top: 14px;
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.18;
+      letter-spacing: 0.02em;
+    }
+
+    .header-subtitle {
+      margin-top: 6px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .profile-card {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      border: 1px solid rgba(122, 101, 219, 0.35);
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(122, 101, 219, 0.24), rgba(255, 255, 255, 0.04));
+      box-shadow:
+        0 14px 30px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .avatar {
+      width: 72px;
+      height: 72px;
+      flex-shrink: 0;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.05);
+      object-fit: cover;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+    }
+
+    .info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .name {
+      color: var(--white);
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.25;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .vtc-id {
+      margin-top: 8px;
+      color: rgba(255, 255, 255, 0.62);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .vtc-id .group {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 8px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
+    }
+
+    .content {
+      position: relative;
+      padding: 14px;
+    }
+
+    .section {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .section:first-child {
+      margin-top: 0;
+    }
+
+    .section-title {
+      margin-bottom: 12px;
+      color: rgba(255, 255, 255, 0.64);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .form-box {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .form-item {
+      min-width: 0;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.28);
+    }
+
+    .form-item.full {
+      grid-column: 1 / -1;
+    }
+
+    .label {
+      margin-bottom: 6px;
+      color: rgba(255, 255, 255, 0.54);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .value {
+      color: var(--white);
+      font-size: 15px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .banner-section {
+      padding: 10px;
+    }
+
+    .cover-image {
+      width: 100%;
+      aspect-ratio: 1920 / 350;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.28);
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div class="page-header">
+      <div class="page-header-top">
+        <div class="header-kicker">Prime Logistics</div>
+        <div class="header-logo">
+          <img src="./package/img/logo2.png" alt="Logo">
+        </div>
+      </div>
+      <div class="header-title">VTC Profile</div>
+      <div class="header-subtitle">Prime Logistics TMP VTC lookup</div>
+      <div class="profile-card">
+        <img class="avatar" id="vtc-logo" src="" alt="logo">
+        <div class="info">
+          <div class="name" id="vtc-name">-</div>
+          <div class="vtc-id" id="vtc-id"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="section banner-section" id="cover-section">
+        <img class="cover-image" id="vtc-cover" src="" alt="cover">
+      </div>
+
+      <div class="section">
+        <div class="section-title">VTC Details</div>
+        <div class="form-box">
+          <div class="form-item">
+            <div class="label">VTC ID</div>
+            <div class="value" id="detail-vtc-id"></div>
+          </div>
+          <div class="form-item">
+            <div class="label">Member Count</div>
+            <div class="value" id="detail-member-count"></div>
+          </div>
+          <div class="form-item">
+            <div class="label">Owner TMP ID</div>
+            <div class="value" id="detail-owner-tmp-id"></div>
+          </div>
+          <div class="form-item">
+            <div class="label">Level</div>
+            <div class="value" id="detail-level"></div>
+          </div>
+          <div class="form-item full">
+            <div class="label">Create Time</div>
+            <div class="value" id="detail-create-time"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function formatValue(value) {
+      return value === null || value === undefined || value === '' ? '-' : value;
+    }
+
+    function init(data) {
+      document.getElementById('vtc-logo').src = data.logoUrl || './package/img/logo2.png';
+      document.getElementById('vtc-name').innerText = formatValue(data.name);
+      document.getElementById('vtc-id').innerHTML = `VTC#${formatValue(data.vtcId)} <span class="group" style="background-color: ${data.levelColor}">${formatValue(data.level)}</span>`;
+
+      document.getElementById('detail-vtc-id').innerText = formatValue(data.vtcId);
+      document.getElementById('detail-member-count').innerText = formatValue(data.memberCount);
+      document.getElementById('detail-owner-tmp-id').innerText = formatValue(data.ownerTmpId);
+      document.getElementById('detail-level').innerText = formatValue(data.level);
+      document.getElementById('detail-create-time').innerText = formatValue(data.createTime);
+
+      if (data.coverUrl) {
+        document.getElementById('vtc-cover').src = data.coverUrl;
+      } else {
+        document.getElementById('cover-section').remove();
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Mileage Leaderboard</title>
+  <style>
+    @font-face {
+      font-family: 'segui-emj';
+      src: url('./package/SEGUIEMJ.TTF');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    :root {
+      --accent: #7A65DB;
+      --accent-soft: rgba(122, 101, 219, 0.18);
+      --accent-strong: rgba(122, 101, 219, 0.34);
+      --black: #000000;
+      --white: #ffffff;
+      --muted: rgba(255, 255, 255, 0.68);
+      --line: rgba(255, 255, 255, 0.12);
+      --panel: rgba(255, 255, 255, 0.06);
+      --panel-strong: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background:
+        radial-gradient(circle at top, rgba(122, 101, 219, 0.3), transparent 42%),
+        linear-gradient(180deg, #111111 0%, #000000 100%);
+      font-family: 'segui-emj', 'Segoe UI', sans-serif;
+      color: var(--white);
+    }
+
+    #container {
+      position: relative;
+      width: 340px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(160deg, rgba(122, 101, 219, 0.22) 0%, rgba(122, 101, 219, 0.04) 32%, rgba(0, 0, 0, 0.96) 100%);
+      box-shadow:
+        0 20px 44px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    #container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 26%),
+        linear-gradient(180deg, transparent, rgba(122, 101, 219, 0.1));
+      pointer-events: none;
+    }
+
+    .header {
+      position: relative;
+      padding: 20px 18px 14px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(122, 101, 219, 0.9), transparent);
+    }
+
+    .header-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+      padding: 4px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .header .title {
+      font-size: 21px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: 0.02em;
+      color: var(--white);
+    }
+
+    .header-subtitle {
+      margin-top: 6px;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .header-logo{
+      margin-left: 80px;
+    }
+
+    .leaderboard-container,
+    .current-player-container {
+      position: relative;
+      padding: 14px 14px 0;
+    }
+
+    .section-label {
+      margin-bottom: 10px;
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .leaderboard-item {
+      position: relative;
+      margin-bottom: 8px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .leaderboard-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(122, 101, 219, 0.12), transparent 42%);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+
+    .leaderboard-item.top3 {
+      border-color: rgba(122, 101, 219, 0.5);
+      background: linear-gradient(135deg, rgba(122, 101, 219, 0.26), rgba(255, 255, 255, 0.05));
+      box-shadow:
+        0 10px 26px rgba(122, 101, 219, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .leaderboard-item.top3::before,
+    .leaderboard-item.current-player::before {
+      opacity: 1;
+    }
+
+    .leaderboard-item.current-player {
+      border-color: rgba(122, 101, 219, 0.68);
+      background: linear-gradient(135deg, rgba(122, 101, 219, 0.34), rgba(255, 255, 255, 0.06));
+      box-shadow:
+        0 12px 30px rgba(122, 101, 219, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .item-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 12px;
+    }
+
+    .rank {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      flex-shrink: 0;
+    }
+
+    .rank.top1,
+    .rank.top2,
+    .rank.top3 {
+      background: var(--white);
+      color: var(--accent);
+      box-shadow: 0 8px 18px rgba(255, 255, 255, 0.16);
+    }
+
+    .player-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .player-name {
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 150px;
+    }
+
+    .player-meta {
+      margin-top: 4px;
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mileage-block {
+      min-width: 82px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .mileage-value {
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .mileage-label {
+      margin-top: 4px;
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .divider {
+      height: 1px;
+      margin: 12px 14px 0;
+      background: linear-gradient(90deg, transparent, rgba(122, 101, 219, 0.8), transparent);
+    }
+
+    .current-player-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .current-player-title span:last-child {
+      color: rgba(255, 255, 255, 0.56);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .footer-note {
+      padding: 14px 18px 18px;
+      color: rgba(255, 255, 255, 0.48);
+      font-size: 10px;
+      line-height: 1.6;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div class="header">
+      <div><div class="header-kicker">Prime Logistics</div>
+      <div class="title">里程排行榜</div>
+      <div class="header-subtitle">Mileage Leaderboard</div></div>
+      
+      <div>
+        <div class="header-logo">
+        <img src="./package/img/logo2.png" alt="Logo" style="width: 64px; height: 64px;">
+      </div></div>
+    </div>
+
+    <div class="leaderboard-container">
+      <div class="section-label">Top 10 Drivers</div>
+      <div id="top-rankings"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="current-player-container">
+      <div class="current-player-title">
+        <span>我的排名</span>
+        <span>Your Position</span>
+      </div>
+      <div id="current-player"></div>
+    </div>
+
+    <div class="footer-note" id="footer-note">
+      © Superman-Q 2026. All rights reserved. <br/>
+      本页面仅供Prime Logistics CN内部使用，未经授权禁止转载或商用。
+    </div>
+  </div>
+
+  <script>
+    function createLeaderboardItem(rank, playerName, mileage, isCurrentPlayer = false, isTop3 = false) {
+      const item = document.createElement('div');
+      item.className = `leaderboard-item${isTop3 ? ' top3' : ''}${isCurrentPlayer ? ' current-player' : ''}`;
+
+      let rankClass = '';
+      if (rank === 1) rankClass = 'top1';
+      else if (rank === 2) rankClass = 'top2';
+      else if (rank === 3) rankClass = 'top3';
+
+      item.innerHTML = `
+        <div class="item-content">
+          <div class="rank ${rankClass}">#${rank}</div>
+          <div class="player-info">
+            <div class="player-name">${playerName}</div>
+            <div class="player-meta">${isCurrentPlayer ? 'Current Driver' : isTop3 ? 'Top Performer' : 'Distance Ranking'}</div>
+          </div>
+          <div class="mileage-block">
+            <div class="mileage-value">${formatMileage(mileage)}</div>
+            <div class="mileage-label">Mileage</div>
+          </div>
+        </div>
+      `;
+
+      return item;
+    }
+
+    function formatMileage(mileage) {
+      const meters = parseInt(mileage);
+      if (isNaN(meters) || meters < 0) return '0 km';
+
+      const km = meters / 1000;
+
+      if (km >= 1000000) {
+        const value = (km / 1000000).toFixed(2);
+        return value.endsWith('.00') ? Math.floor(km / 1000000) + 'M km' : value + 'M km';
+      } else if (km >= 1000) {
+        const value = (km / 1000).toFixed(2);
+        return value.endsWith('.00') ? Math.floor(km / 1000) + 'K km' : value + 'K km';
+      } else if (km >= 1) {
+        return Math.floor(km).toLocaleString() + ' km';
+      } else {
+        return meters.toLocaleString() + ' m';
+      }
+    }
+
+    function setCurrentPlayerVisibility(visible) {
+      const divider = document.querySelector('.divider');
+      const currentPlayerSection = document.querySelector('.current-player-container');
+      if (divider) divider.style.display = visible ? 'block' : 'none';
+      if (currentPlayerSection) currentPlayerSection.style.display = visible ? 'block' : 'none';
+    }
+
+    function setData(apiData) {
+      if (!apiData) {
+        console.error('数据无效');
+        return;
+      }
+
+      const titleElement = document.querySelector('.header .title');
+      const subtitleElement = document.querySelector('.header-subtitle');
+      const footerElement = document.getElementById('footer-note');
+
+      if (titleElement) {
+        const titles = {
+          1: '总里程排行榜',
+          2: '今日里程排行榜'
+        };
+        const subtitles = {
+          1: 'Total Mileage Leaderboard',
+          2: 'Today Mileage Leaderboard'
+        };
+        const footerNotes = {
+          1: '* 数据自 2025-01-03 20:00 起开始统计',
+          2: '* 每日 0:00 重置统计'
+        };
+
+        titleElement.textContent = titles[apiData.rankingType] || '里程排行榜';
+        if (subtitleElement) subtitleElement.textContent = subtitles[apiData.rankingType] || 'Mileage Leaderboard';
+        if (footerElement) footerElement.textContent = footerNotes[apiData.rankingType] || '* 数据统计说明';
+      }
+
+      const topRankings = document.getElementById('top-rankings');
+      const currentPlayerContainer = document.getElementById('current-player');
+
+      topRankings.innerHTML = '';
+      currentPlayerContainer.innerHTML = '';
+      setCurrentPlayerVisibility(true);
+
+      if (apiData.mileageRankingList && Array.isArray(apiData.mileageRankingList)) {
+        apiData.mileageRankingList.slice(0, 10).forEach((player) => {
+          if (player && player.tmpName && typeof player.distance !== 'undefined' && typeof player.ranking !== 'undefined') {
+            const isTop3 = player.ranking <= 3;
+            const item = createLeaderboardItem(player.ranking, player.tmpName, player.distance, false, isTop3);
+            topRankings.appendChild(item);
+          }
+        });
+      }
+
+      if (apiData.playerMileageRanking && apiData.playerMileageRanking.tmpName && typeof apiData.playerMileageRanking.ranking !== 'undefined') {
+        const currentItem = createLeaderboardItem(
+          apiData.playerMileageRanking.ranking,
+          apiData.playerMileageRanking.tmpName,
+          apiData.playerMileageRanking.distance,
+          true,
+          false
+        );
+        currentPlayerContainer.appendChild(currentItem);
+      } else {
+        setCurrentPlayerVisibility(false);
+      }
+    }
+
+    function init(data) {
+      if (!data) {
+        console.error('数据无效');
+        return;
+      }
+
+      const topRankings = document.getElementById('top-rankings');
+      const currentPlayerContainer = document.getElementById('current-player');
+
+      topRankings.innerHTML = '';
+      currentPlayerContainer.innerHTML = '';
+      setCurrentPlayerVisibility(true);
+
+      if (data.topRankings && Array.isArray(data.topRankings)) {
+        data.topRankings.slice(0, 10).forEach((player, index) => {
+          if (player && player.name && typeof player.mileage !== 'undefined') {
+            const rank = index + 1;
+            const isTop3 = rank <= 3;
+            const item = createLeaderboardItem(rank, player.name, player.mileage, false, isTop3);
+            topRankings.appendChild(item);
+          }
+        });
+      }
+
+      if (data.currentPlayer && data.currentPlayer.name && typeof data.currentPlayer.rank !== 'undefined') {
+        const currentItem = createLeaderboardItem(
+          data.currentPlayer.rank,
+          data.currentPlayer.name,
+          data.currentPlayer.mileage,
+          true,
+          false
+        );
+        currentPlayerContainer.appendChild(currentItem);
+      } else {
+        setCurrentPlayerVisibility(false);
+      }
+    }
+
+    const sampleData = {
+      topRankings: [
+        { name: "Afo780", mileage: 347167 },
+        { name: "l伪d褍 谓伪l褦褟ij伪", mileage: 331177 },
+        { name: "Stefan Z", mileage: 330658 },
+        { name: "YorkshireSlacka", mileage: 328871 },
+        { name: "Sun      [PL]", mileage: 327208 },
+        { name: "joewales96 LAG", mileage: 324952 },
+        { name: "Turbo_Express", mileage: 320211 },
+        { name: "gapcio9933", mileage: 319599 },
+        { name: "R8 anderson", mileage: 319004 },
+        { name: "lorddarki85", mileage: 317788 }
+      ],
+      currentPlayer: {
+        rank: 3365,
+        name: "ZyRoX Drum",
+        mileage: 59515
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      init(sampleData);
+    });
+  </script>
+</body>
+</html>

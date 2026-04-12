@@ -1,0 +1,113 @@
+0 verbose cli I:\nodejs\node.exe C:\Users\LYT\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.6.0
+2 info using node@v22.19.0
+3 silly config load:file:C:\Users\LYT\AppData\Roaming\npm\node_modules\npm\npmrc
+4 info config found workspace root at H:\koishi_project\koishi\koishi-app
+5 silly config load:file:H:\koishi_project\koishi\koishi-app\.npmrc
+6 silly config load:file:C:\Users\LYT\.npmrc
+7 silly config load:file:C:\Users\LYT\AppData\Roaming\npm\etc\npmrc
+8 verbose title npm pack
+9 verbose argv "pack" "--dry-run" "--cache" ".npm-cache"
+10 verbose logfile logs-max:10 dir:H:\koishi_project\koishi\koishi-app\external\prime-tmp-bot\.npm-cache\_logs\2026-04-11T16_02_41_024Z-
+11 verbose logfile H:\koishi_project\koishi\koishi-app\external\prime-tmp-bot\.npm-cache\_logs\2026-04-11T16_02_41_024Z-debug-0.log
+12 silly logfile done cleaning log files
+13 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+14 verbose shrinkwrap failed to load node_modules/.package-lock.json out of date, updated: node_modules
+15 notice
+16 notice package: koishi-plugin-prime-tmp-bot@2.0.5
+17 notice Tarball Contents
+18 notice 1.1kB LICENSE
+18 notice 957B lib/api/evmOpenApi.d.ts
+18 notice 3.8kB lib/api/evmOpenApi.js
+18 notice 605B lib/api/truckersMpApi.d.ts
+18 notice 2.5kB lib/api/truckersMpApi.js
+18 notice 148B lib/api/truckersMpMapApi.d.ts
+18 notice 626B lib/api/truckersMpMapApi.js
+18 notice 233B lib/api/truckyAppApi.d.ts
+18 notice 1.2kB lib/api/truckyAppApi.js
+18 notice 109B lib/command/tmpBind.d.ts
+18 notice 690B lib/command/tmpBind.js
+18 notice 190B lib/command/tmpDlcMap.d.ts
+18 notice 1.1kB lib/command/tmpDlcMap.js
+18 notice 113B lib/command/tmpFootprint.d.ts
+18 notice 4.1kB lib/command/tmpFootprint.js
+18 notice 257B lib/command/tmpMileageRanking.d.ts
+18 notice 2.1kB lib/command/tmpMileageRanking.js
+18 notice 106B lib/command/tmpPosition.d.ts
+18 notice 4.1kB lib/command/tmpPosition.js
+18 notice 109B lib/command/tmpQuery.d.ts
+18 notice 4.9kB lib/command/tmpQuery.js
+18 notice 106B lib/command/tmpQuery/tmpQuery.d.ts
+18 notice 630B lib/command/tmpQuery/tmpQuery.js
+18 notice 308B lib/command/tmpQuery/tmpQueryImg.d.ts
+18 notice 4.4kB lib/command/tmpQuery/tmpQueryImg.js
+18 notice 109B lib/command/tmpQuery/tmpQueryText.d.ts
+18 notice 4.9kB lib/command/tmpQuery/tmpQueryText.js
+18 notice 73B lib/command/tmpServer.d.ts
+18 notice 1.2kB lib/command/tmpServer.js
+18 notice 127B lib/command/tmpTraffic/tmpTraffic.d.ts
+18 notice 435B lib/command/tmpTraffic/tmpTraffic.js
+18 notice 285B lib/command/tmpTraffic/tmpTrafficMap.d.ts
+18 notice 3.7kB lib/command/tmpTraffic/tmpTrafficMap.js
+18 notice 100B lib/command/tmpTraffic/tmpTrafficText.d.ts
+18 notice 1.7kB lib/command/tmpTraffic/tmpTrafficText.js
+18 notice 73B lib/command/tmpVersion.d.ts
+18 notice 531B lib/command/tmpVersion.js
+18 notice 136B lib/command/tmpVtc/tmpVtc.d.ts
+18 notice 400B lib/command/tmpVtc/tmpVtc.js
+18 notice 299B lib/command/tmpVtc/tmpVtcImg.d.ts
+18 notice 2.1kB lib/command/tmpVtc/tmpVtcImg.js
+18 notice 109B lib/command/tmpVtc/tmpVtcText.d.ts
+18 notice 1.2kB lib/command/tmpVtc/tmpVtcText.js
+18 notice 407B lib/database/guildBind.d.ts
+18 notice 1.1kB lib/database/guildBind.js
+18 notice 62B lib/database/model.d.ts
+18 notice 1.5kB lib/database/model.js
+18 notice 406B lib/database/translateCache.d.ts
+18 notice 926B lib/database/translateCache.js
+18 notice 71B lib/global.d.ts
+18 notice 439B lib/index.d.ts
+18 notice 3.8kB lib/index.js
+18 notice 7.6kB lib/resource/dlc.html
+18 notice 7.2kB lib/resource/footprint.html
+18 notice 14.3kB lib/resource/mileage-leaderboard.html
+18 notice 1.3kB lib/resource/package/ets-map.js
+18 notice 73.6kB lib/resource/package/img/logo.png
+18 notice 120.1kB lib/resource/package/img/logo2.png
+18 notice 10.9kB lib/resource/package/leaflet/heatmap.min.js
+18 notice 8.1kB lib/resource/package/leaflet/leaflet-heatmap.js
+18 notice 10.9kB lib/resource/package/leaflet/leaflet.min.css
+18 notice 147.2kB lib/resource/package/leaflet/leaflet.min.js
+18 notice 2.1MB lib/resource/package/SEGUIEMJ.TTF
+18 notice 9.5kB lib/resource/position.html
+18 notice 16.9kB lib/resource/query.html
+18 notice 9.9kB lib/resource/traffic.html
+18 notice 9.0kB lib/resource/vtc-query.html
+18 notice 111B lib/util/baiduTranslate.d.ts
+18 notice 1.4kB lib/util/baiduTranslate.js
+18 notice 121B lib/util/common.d.ts
+18 notice 1.2kB lib/util/common.js
+18 notice 395B lib/util/constant.d.ts
+18 notice 582B lib/util/constant.js
+18 notice 48B lib/util/logger.d.ts
+18 notice 283B lib/util/logger.js
+18 notice 432B lib/util/tmpIdResolver.d.ts
+18 notice 2.6kB lib/util/tmpIdResolver.js
+18 notice 852B package.json
+18 notice 3.6kB readme.md
+19 notice Tarball Details
+20 notice name: koishi-plugin-prime-tmp-bot
+21 notice version: 2.0.5
+22 notice filename: koishi-plugin-prime-tmp-bot-2.0.5.tgz
+23 notice package size: 1.4 MB
+24 notice unpacked size: 2.6 MB
+25 notice shasum: 230ed999d09612cd2bd3e8f01fb7f43265818f3e
+26 notice integrity: sha512-r9x1Xj3O20zaY[...]NuBxxqDfuyBjg==
+27 notice total files: 79
+28 notice
+29 verbose cwd H:\koishi_project\koishi\koishi-app\external\prime-tmp-bot
+30 verbose os Windows_NT 10.0.19045
+31 verbose node v22.19.0
+32 verbose npm  v11.6.0
+33 verbose exit 0
+34 info ok

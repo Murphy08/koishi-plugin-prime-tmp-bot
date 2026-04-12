@@ -1,0 +1,19 @@
+0 verbose cli I:\nodejs\node.exe C:\Users\LYT\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.6.0
+2 info using node@v22.19.0
+3 silly config load:file:C:\Users\LYT\AppData\Roaming\npm\node_modules\npm\npmrc
+4 info config found workspace root at H:\koishi_project\koishi\koishi-app
+5 silly config load:file:H:\koishi_project\koishi\koishi-app\.npmrc
+6 silly config load:file:C:\Users\LYT\.npmrc
+7 silly config load:file:C:\Users\LYT\AppData\Roaming\npm\etc\npmrc
+8 verbose title npm run build
+9 verbose argv "run" "build"
+10 verbose logfile logs-max:10 dir:H:\koishi_project\koishi\koishi-app\external\prime-tmp-bot\.npm-cache\_logs\2026-04-11T16_02_43_441Z-
+11 verbose logfile H:\koishi_project\koishi\koishi-app\external\prime-tmp-bot\.npm-cache\_logs\2026-04-11T16_02_43_441Z-debug-0.log
+12 silly logfile done cleaning log files
+13 verbose cwd H:\koishi_project\koishi\koishi-app\external\prime-tmp-bot
+14 verbose os Windows_NT 10.0.19045
+15 verbose node v22.19.0
+16 verbose npm  v11.6.0
+17 verbose exit 0
+18 info ok
