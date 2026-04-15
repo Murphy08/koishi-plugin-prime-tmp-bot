@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-prime-tmp-bot",
   "description": "欧洲卡车模拟2 TMP查询插件; Prime Logistics 中国社区专用",
-  "version": "2.0.6",
+  "version": "2.0.8",
   "homepage": "https://github.com/Murphy08/koishi-plugin-prime-tmp-bot",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.13",
-    "js-md5": "^0.8.3"
+    "js-md5": "^0.8.3",
+    "marked": "^12.0.2"
   }
 }

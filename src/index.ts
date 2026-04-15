@@ -1,16 +1,4 @@
-import { Context, Schema } from 'koishi'
-const model = require('./database/model')
-const { MileageRankingType } = require('./util/constant')
-const tmpQuery = require('./command/tmpQuery')
-const tmpServer = require('./command/tmpServer')
-const tmpBind = require('./command/tmpBind')
-const tmpTraffic = require('./command/tmpTraffic/tmpTraffic')
-const tmpPosition = require('./command/tmpPosition')
-const tmpVersion = require('./command/tmpVersion')
-const tmpDlcMap = require('./command/tmpDlcMap')
-const tmpMileageRanking = require('./command/tmpMileageRanking')
-const tmpFootprint = require('./command/tmpFootprint')
-const { ServerType } = require('./util/constant')
+﻿import { Context, Schema } from 'koishi'
 
 require('./util/logger')
 
@@ -26,6 +14,7 @@ const tmpVersion = require('./command/tmpVersion')
 const tmpDlcMap = require('./command/tmpDlcMap')
 const tmpMileageRanking = require('./command/tmpMileageRanking')
 const tmpFootprint = require('./command/tmpFootprint')
+const tmpEvent = require('./command/tmpEvent')
 
 export const name = 'tmp-bot'
 
@@ -39,6 +28,12 @@ export interface Config {
   baiduTranslateAppId: string
   baiduTranslateKey: string
   baiduTranslateCacheEnable: boolean
+  queryShowAvatarEnable: boolean
+  tmpTrafficType: 1 | 2
+  tmpQueryType: 1 | 2
+  tmpVtcQueryType: 1 | 2
+  defaultVTCID: number
+  tmpeventType: 1 | 2
 }
 
 export const Config: Schema<Config> = Schema.intersect([
@@ -61,7 +56,12 @@ export const Config: Schema<Config> = Schema.intersect([
     tmpVtcQueryType: Schema.union([
       Schema.const(1).description('文字'),
       Schema.const(2).description('图片')
-    ]).default(2).description('VTC 查询信息展示方式')
+    ]).default(2).description('VTC 查询信息展示方式'),
+    defaultVTCID: Schema.number().default(7).description('默认 VTC ID'),
+    tmpeventType: Schema.union([
+      Schema.const(1).description('文字'),
+      Schema.const(2).description('图片')
+    ]).default(2).description('活动信息展示方式')
   }).description('指令配置')
 ])
 
@@ -80,4 +80,7 @@ export function apply(ctx: Context, cfg: Config) {
   ctx.command('tmptodaymileageranking').action(async ({ session }) => await tmpMileageRanking(ctx, session, MileageRankingType.today))
   ctx.command('tmpfootprints [tmpId]').action(async ({ session }, tmpId) => await tmpFootprint(ctx, session, ServerType.ets, tmpId))
   ctx.command('tmpfootprintp [tmpId]').action(async ({ session }, tmpId) => await tmpFootprint(ctx, session, ServerType.promods, tmpId))
+  ctx.command('tmpevent <eventId>').action(async ({ session }, eventId) => await tmpEvent(ctx, cfg, session, 'eventById', eventId))
+  ctx.command('tmpdefaultvtcrecent [count]').action(async ({ session }, count) => await tmpEvent(ctx, cfg, session, 'defaultVtcRecent', count))
+  ctx.command('tmpvtcrecent [vtcId] [count]').action(async ({ session }, vtcId, count) => await tmpEvent(ctx, cfg, session, 'vtcRecent', vtcId, count))
 }

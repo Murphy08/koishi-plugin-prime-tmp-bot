@@ -14,8 +14,7 @@
     "jsxImportSource": "@satorijs/element",
     "allowJs": true,
     "types": [
-      "node",
-      "yml-register/types"
+      "node"
     ]
   },
   "include": [

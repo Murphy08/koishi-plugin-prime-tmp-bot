@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>TruckersMP Event</title>
+  <style>
+    @font-face {
+      font-family: 'segui-emj';
+      src: url('./package/SEGUIEMJ.TTF');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    :root {
+      --bg-1: #120d08;
+      --bg-2: #22160d;
+      --bg-3: #061a1b;
+      --panel: rgba(255, 248, 239, 0.075);
+      --panel-strong: rgba(255, 248, 239, 0.12);
+      --line: rgba(255, 248, 239, 0.14);
+      --text: #fff8ef;
+      --muted: rgba(255, 248, 239, 0.72);
+      --soft: rgba(255, 248, 239, 0.46);
+      --accent: #ff9a3d;
+      --accent-strong: #ffc166;
+      --accent-cool: #52d7c9;
+      --accent-cool-soft: rgba(82, 215, 201, 0.2);
+      --shadow: rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      padding: 28px;
+      color: var(--text);
+      font-family: 'segui-emj', 'Trebuchet MS', 'Segoe UI', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255, 154, 61, 0.22), transparent 34%),
+        radial-gradient(circle at top right, rgba(82, 215, 201, 0.18), transparent 30%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0, rgba(255, 255, 255, 0.03) 1px, transparent 1px, transparent 18px),
+        linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 54%, #050608 100%);
+      background-size: auto, auto, 18px 18px, auto;
+    }
+
+    #event-card {
+      width: 1120px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      border-radius: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+        linear-gradient(145deg, rgba(255, 154, 61, 0.08), rgba(82, 215, 201, 0.06) 34%, rgba(0, 0, 0, 0.3) 72%);
+      box-shadow:
+        0 30px 90px rgba(0, 0, 0, 0.48),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    #event-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 16%, rgba(255, 193, 102, 0.12), transparent 24%),
+        radial-gradient(circle at 88% 24%, rgba(82, 215, 201, 0.14), transparent 26%);
+      pointer-events: none;
+    }
+
+    .topbar {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 24px 28px 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .eyebrow::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--accent-strong), var(--accent));
+      box-shadow: 0 0 18px rgba(255, 154, 61, 0.58);
+    }
+
+    .stamp {
+      padding: 9px 15px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.22);
+      text-align: right;
+      color: var(--soft);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.16fr 0.94fr;
+      gap: 22px;
+      padding: 20px 28px 0;
+      align-items: stretch;
+    }
+
+    .hero-poster {
+      position: relative;
+      min-height: 320px;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 154, 61, 0.12), rgba(0, 0, 0, 0.12)),
+        rgba(255, 255, 255, 0.02);
+    }
+
+    .hero-poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-poster::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(7, 7, 8, 0.82)),
+        linear-gradient(120deg, rgba(255, 154, 61, 0.14), transparent 36%);
+    }
+
+    .poster-badge {
+      position: absolute;
+      left: 18px;
+      top: 18px;
+      z-index: 2;
+      padding: 8px 12px;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .hero-copy {
+      position: relative;
+      padding: 24px;
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(150deg, rgba(255, 154, 61, 0.16), rgba(82, 215, 201, 0.1) 44%, rgba(255, 255, 255, 0.03) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 16px 36px rgba(0, 0, 0, 0.14);
+    }
+
+    .event-type {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .event-name {
+      margin: 18px 0 12px;
+      font-size: 40px;
+      line-height: 1.14;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .meta-line {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      word-break: break-word;
+    }
+
+    .meta-line strong {
+      color: var(--text);
+    }
+
+    .headline-strip {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .headline-item {
+      padding: 14px 15px;
+      border-radius: 18px;
+      background: rgba(0, 0, 0, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .headline-item span {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--soft);
+    }
+
+    .headline-item strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1.45;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .content {
+      position: relative;
+      padding: 24px 28px 30px;
+    }
+
+    .section {
+      margin-top: 18px;
+      padding: 20px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .section:first-child {
+      margin-top: 0;
+    }
+
+    .section-title {
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field-grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field-grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .field-card {
+      min-width: 0;
+      padding: 14px 15px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .field-card .label {
+      margin-bottom: 7px;
+      color: var(--soft);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .field-card .value {
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .time-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .time-card {
+      padding: 18px;
+      border-radius: 22px;
+      background:
+        linear-gradient(140deg, rgba(255, 154, 61, 0.12), rgba(82, 215, 201, 0.08));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .time-card h3 {
+      margin: 0 0 12px;
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .time-pair {
+      display: grid;
+      gap: 8px;
+    }
+
+    .time-pill {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(0, 0, 0, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 15px;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    .time-pill span {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--soft);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat-card {
+      padding: 18px 16px;
+      border-radius: 20px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.14));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: center;
+    }
+
+    .stat-card span {
+      display: block;
+      color: var(--soft);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .stat-card strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 28px;
+      line-height: 1;
+      color: var(--text);
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .media-card {
+      position: relative;
+      min-height: 280px;
+      overflow: hidden;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .media-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .media-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.42));
+      pointer-events: none;
+    }
+
+    .media-tag {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      z-index: 1;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.38);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .link-card {
+      padding: 14px 15px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      min-width: 0;
+    }
+
+    .link-card .label {
+      margin-bottom: 8px;
+      color: var(--soft);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .link-card a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      line-height: 1.55;
+      word-break: break-all;
+    }
+
+    .dlc-wrap {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .dlc-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 104px;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(135deg, rgba(255, 154, 61, 0.12), rgba(82, 215, 201, 0.06)),
+        rgba(255, 255, 255, 0.03);
+    }
+
+    .dlc-card img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.28;
+    }
+
+    .dlc-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(7, 9, 11, 0.9), rgba(7, 9, 11, 0.42));
+    }
+
+    .dlc-copy {
+      position: relative;
+      z-index: 1;
+      padding: 16px 18px;
+    }
+
+    .dlc-copy strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1.4;
+      color: var(--text);
+    }
+
+    .dlc-copy span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .empty-note {
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px dashed rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .rich-box {
+      padding: 20px;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.12));
+    }
+
+    .rich-title {
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .rich-content {
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.72;
+      word-break: break-word;
+    }
+
+    .rich-content > :first-child {
+      margin-top: 0;
+    }
+
+    .rich-content > :last-child {
+      margin-bottom: 0;
+    }
+
+    .rich-content h1,
+    .rich-content h2,
+    .rich-content h3,
+    .rich-content h4 {
+      margin: 1.2em 0 0.6em;
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    .rich-content p,
+    .rich-content li {
+      color: var(--text);
+    }
+
+    .rich-content a {
+      color: var(--accent-cool);
+      text-decoration: none;
+    }
+
+    .rich-content img {
+      max-width: 100%;
+      border-radius: 16px;
+      margin: 12px 0;
+      display: block;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .rich-content blockquote {
+      margin: 14px 0;
+      padding: 12px 14px 12px 16px;
+      border-left: 3px solid var(--accent-cool);
+      border-radius: 0 14px 14px 0;
+      background: rgba(82, 215, 201, 0.08);
+      color: var(--muted);
+    }
+
+    .rich-content code {
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.07);
+      font-size: 0.92em;
+    }
+  </style>
+</head>
+<body>
+  <div id="event-card">
+    <div class="topbar">
+      <div class="eyebrow">Prime TMP Event</div>
+      <div class="stamp" id="event-stamp">活动档案</div>
+    </div>
+
+    <div class="hero">
+      <div class="hero-poster" id="hero-poster-box">
+        <div class="poster-badge">Banner</div>
+        <img id="hero-poster" src="" alt="banner">
+      </div>
+
+      <div class="hero-copy">
+        <div class="event-type" id="event-type">EVENT</div>
+        <div class="event-name" id="event-name">-</div>
+        <div class="meta-line" id="event-id-line">活动 ID：-</div>
+        <div class="meta-line" id="event-organizer-line">VTC：-</div>
+        <div class="meta-line" id="event-link-line">活动链接：-</div>
+
+        <div class="headline-strip">
+          <div class="headline-item">
+            <span>游戏</span>
+            <strong id="event-game">-</strong>
+          </div>
+          <div class="headline-item">
+            <span>服务器</span>
+            <strong id="event-server">-</strong>
+          </div>
+          <div class="headline-item">
+            <span>语言</span>
+            <strong id="event-language">-</strong>
+          </div>
+          <div class="headline-item">
+            <span>活动类型</span>
+            <strong id="event-type-name">-</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="section">
+        <div class="section-title">地点信息</div>
+        <div class="field-grid">
+          <div class="field-card">
+            <div class="label">出发城市</div>
+            <div class="value" id="departure-city">-</div>
+          </div>
+          <div class="field-card">
+            <div class="label">出发地点</div>
+            <div class="value" id="departure-location">-</div>
+          </div>
+          <div class="field-card">
+            <div class="label">到达城市</div>
+            <div class="value" id="arrive-city">-</div>
+          </div>
+          <div class="field-card">
+            <div class="label">到达地点</div>
+            <div class="value" id="arrive-location">-</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">时间信息</div>
+        <div class="time-grid">
+          <div class="time-card">
+            <h3>集合时间</h3>
+            <div class="time-pair">
+              <div class="time-pill">
+                <span>UTC</span>
+                <div id="meetup-utc">-</div>
+              </div>
+              <div class="time-pill">
+                <span>北京时间</span>
+                <div id="meetup-bj">-</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="time-card">
+            <h3>发车时间</h3>
+            <div class="time-pair">
+              <div class="time-pill">
+                <span>UTC</span>
+                <div id="start-utc">-</div>
+              </div>
+              <div class="time-pill">
+                <span>北京时间</span>
+                <div id="start-bj">-</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">VTC 与参与情况</div>
+        <div class="field-grid three" style="margin-bottom: 12px;">
+          <div class="field-card">
+            <div class="label">VTC ID</div>
+            <div class="value" id="vtc-id">-</div>
+          </div>
+          <div class="field-card">
+            <div class="label">VTC 名称</div>
+            <div class="value" id="vtc-name">-</div>
+          </div>
+          <div class="field-card">
+            <div class="label">主办用户</div>
+            <div class="value" id="event-user">-</div>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat-card">
+            <span>确认参加</span>
+            <strong id="stat-confirmed">-</strong>
+          </div>
+          <div class="stat-card">
+            <span>待定</span>
+            <strong id="stat-unsure">-</strong>
+          </div>
+          <div class="stat-card">
+            <span>VTC 数</span>
+            <strong id="stat-vtcs">-</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" id="media-section">
+        <div class="section-title">活动视觉</div>
+        <div class="media-grid">
+          <div class="media-card" id="banner-card">
+            <div class="media-tag">活动海报</div>
+            <img id="banner-image" src="" alt="banner">
+          </div>
+          <div class="media-card" id="map-card">
+            <div class="media-tag">路线图</div>
+            <img id="map-image" src="" alt="map">
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">链接</div>
+        <div class="link-grid" id="link-grid"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">DLC 列表</div>
+        <div class="dlc-wrap" id="dlc-wrap"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">详细内容</div>
+        <div class="field-grid two">
+          <div class="rich-box" id="description-box">
+            <div class="rich-title">活动简介</div>
+            <div class="rich-content" id="description-content"></div>
+          </div>
+          <div class="rich-box" id="rule-box">
+            <div class="rich-title">活动规则</div>
+            <div class="rich-content" id="rule-content"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function waitForImageReady(image) {
+      return new Promise((resolve) => {
+        if (!image || !image.getAttribute('src')) {
+          resolve();
+          return;
+        }
+
+        if (image.complete) {
+          resolve();
+          return;
+        }
+
+        const done = () => {
+          image.removeEventListener('load', done);
+          image.removeEventListener('error', done);
+          resolve();
+        };
+
+        image.addEventListener('load', done, { once: true });
+        image.addEventListener('error', done, { once: true });
+        setTimeout(done, 10000);
+      });
+    }
+
+    function waitForNextFrame() {
+      return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+    }
+
+    async function waitForStableLayout() {
+      let previousHeight = 0;
+
+      for (let i = 0; i < 6; i++) {
+        await waitForNextFrame();
+        await new Promise((resolve) => setTimeout(resolve, 120));
+
+        const element = document.getElementById('event-card');
+        const currentHeight = Math.ceil(element.getBoundingClientRect().height);
+        if (currentHeight === previousHeight) {
+          return;
+        }
+
+        previousHeight = currentHeight;
+      }
+    }
+
+    function setText(id, value) {
+      document.getElementById(id).textContent = value || '-';
+    }
+
+    function setImage(id, url, boxId) {
+      const image = document.getElementById(id);
+      const box = document.getElementById(boxId);
+      if (!url) {
+        if (box) box.style.display = 'none';
+        return;
+      }
+      image.src = url;
+      image.onerror = () => {
+        if (box) box.style.display = 'none';
+      };
+    }
+
+    function setRich(boxId, contentId, html) {
+      const box = document.getElementById(boxId);
+      const content = document.getElementById(contentId);
+      if (!html) {
+        box.style.display = 'none';
+        return;
+      }
+      content.innerHTML = html;
+    }
+
+    function createLinkCard(label, url) {
+      const card = document.createElement('div');
+      card.className = 'link-card';
+
+      const title = document.createElement('div');
+      title.className = 'label';
+      title.textContent = label;
+
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.target = '_blank';
+      anchor.rel = 'noreferrer noopener';
+      anchor.textContent = url;
+
+      card.appendChild(title);
+      card.appendChild(anchor);
+      return card;
+    }
+
+    function renderLinks(data) {
+      const grid = document.getElementById('link-grid');
+      grid.innerHTML = '';
+
+      const links = [
+        ['活动链接', data.url],
+        ['活动海报', data.banner],
+        ['路线图', data.map],
+        ['语音链接', data.voiceLink],
+        ['外部链接', data.externalLink]
+      ].filter(([, url]) => !!url);
+
+      if (!links.length) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-note';
+        empty.style.gridColumn = '1 / -1';
+        empty.textContent = '这个活动没有额外可用链接。';
+        grid.appendChild(empty);
+        return;
+      }
+
+      links.forEach(([label, url]) => {
+        grid.appendChild(createLinkCard(label, url));
+      });
+    }
+
+    function renderDlcs(dlcs) {
+      const wrap = document.getElementById('dlc-wrap');
+      wrap.innerHTML = '';
+
+      if (!Array.isArray(dlcs) || !dlcs.length) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-note';
+        empty.style.gridColumn = '1 / -1';
+        empty.textContent = '无额外 DLC 要求，标准地图就能参加。';
+        wrap.appendChild(empty);
+        return;
+      }
+
+      dlcs.forEach((dlc) => {
+        const card = document.createElement('div');
+        card.className = 'dlc-card';
+        card.innerHTML = `
+          <img src="${dlc.image || ''}" alt="${dlc.name}" />
+          <div class="dlc-copy">
+            <strong>${dlc.name}</strong>
+            <span>Steam App ${dlc.id}</span>
+          </div>
+        `;
+        const image = card.querySelector('img');
+        image.onerror = () => {
+          image.style.display = 'none';
+        };
+        wrap.appendChild(card);
+      });
+    }
+
+    function renderEvent(data) {
+      setText('event-type', data.eventTypeKey || data.eventType || 'event');
+      setText('event-type-name', data.eventType || '-');
+      setText('event-name', data.name || '-');
+      setText('event-game', data.game || '-');
+      setText('event-server', data.serverName || '-');
+      setText('event-language', data.language || '-');
+      setText('departure-city', data.departureCity || '-');
+      setText('departure-location', data.departureLocation || '-');
+      setText('arrive-city', data.arriveCity || '-');
+      setText('arrive-location', data.arriveLocation || '-');
+      setText('meetup-utc', data.meetupUtc || '-');
+      setText('meetup-bj', data.meetupBeijing || '-');
+      setText('start-utc', data.startUtc || '-');
+      setText('start-bj', data.startBeijing || '-');
+      setText('vtc-id', data.vtcId ? String(data.vtcId) : '-');
+      setText('vtc-name', data.vtcName || '-');
+      setText('event-user', data.user && data.user.username ? data.user.username : '-');
+      setText('stat-confirmed', String(data.attendances && data.attendances.confirmed != null ? data.attendances.confirmed : '-'));
+      setText('stat-unsure', String(data.attendances && data.attendances.unsure != null ? data.attendances.unsure : '-'));
+      setText('stat-vtcs', String(data.attendances && data.attendances.vtcs != null ? data.attendances.vtcs : '-'));
+
+      setText('event-id-line', `活动 ID：${data.id || '-'}${data.slug ? ' ｜ ' + data.slug : ''}`);
+      setText('event-organizer-line', `VTC：${data.vtcName || '-'} ｜ VTC ID：${data.vtcId || '-'} ｜ 主办用户：${data.user && data.user.username ? data.user.username : '-'}`);
+      setText('event-link-line', `活动链接：${data.url || '-'}`);
+      setText('event-stamp', `${data.featured ? data.featured + ' ｜ ' : ''}${data.serverName || '活动档案'}`);
+
+      setImage('hero-poster', data.banner || data.map || '', 'hero-poster-box');
+      setImage('banner-image', data.banner || '', 'banner-card');
+      setImage('map-image', data.map || '', 'map-card');
+
+      if (!data.banner && !data.map) {
+        document.getElementById('media-section').style.display = 'none';
+      }
+
+      renderLinks(data);
+      renderDlcs(data.dlcs);
+      setRich('description-box', 'description-content', data.descriptionHtml);
+      setRich('rule-box', 'rule-content', data.ruleHtml);
+    }
+
+    async function prepareEventRender() {
+      if (document.fonts && document.fonts.ready) {
+        try {
+          await document.fonts.ready;
+        } catch {}
+      }
+
+      const images = Array.from(document.querySelectorAll('img'));
+      await Promise.all(images.map(waitForImageReady));
+      await waitForNextFrame();
+      await waitForNextFrame();
+      await waitForStableLayout();
+    }
+
+    window.renderEvent = renderEvent;
+    window.prepareEventRender = prepareEventRender;
+  </script>
+</body>
+</html>
