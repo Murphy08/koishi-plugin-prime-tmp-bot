@@ -1,4 +1,4 @@
-const BASE_API = 'https://api.truckersmp.com/v2'
+const BASE_API = 'https://api.codetabs.com/v1/proxy/?quest=https://api.truckersmp.com/v2'
 
 module.exports = {
   /**

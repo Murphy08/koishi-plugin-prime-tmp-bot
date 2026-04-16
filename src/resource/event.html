@@ -12,56 +12,61 @@
     }
 
     :root {
-      --bg-1: #120d08;
-      --bg-2: #22160d;
-      --bg-3: #061a1b;
-      --panel: rgba(255, 248, 239, 0.075);
-      --panel-strong: rgba(255, 248, 239, 0.12);
-      --line: rgba(255, 248, 239, 0.14);
-      --text: #fff8ef;
-      --muted: rgba(255, 248, 239, 0.72);
-      --soft: rgba(255, 248, 239, 0.46);
-      --accent: #ff9a3d;
-      --accent-strong: #ffc166;
-      --accent-cool: #52d7c9;
-      --accent-cool-soft: rgba(82, 215, 201, 0.2);
-      --shadow: rgba(0, 0, 0, 0.35);
+      --accent: #7a65db;
+      --accent-soft: rgba(122, 101, 219, 0.18);
+      --accent-strong: rgba(122, 101, 219, 0.34);
+      --accent-glow: rgba(122, 101, 219, 0.56);
+      --bg-1: #050505;
+      --bg-2: #101010;
+      --bg-3: #17122a;
+      --panel: rgba(255, 255, 255, 0.07);
+      --panel-strong: rgba(255, 255, 255, 0.12);
+      --line: rgba(255, 255, 255, 0.12);
+      --text: #ffffff;
+      --muted: rgba(255, 255, 255, 0.72);
+      --soft: rgba(255, 255, 255, 0.54);
+      --shadow: rgba(0, 0, 0, 0.46);
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       padding: 0;
     }
 
     body {
-      padding: 28px;
+      padding: 24px;
       color: var(--text);
-      font-family: 'segui-emj', 'Trebuchet MS', 'Segoe UI', sans-serif;
+      font-family: 'segui-emj', 'Segoe UI', sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(255, 154, 61, 0.22), transparent 34%),
-        radial-gradient(circle at top right, rgba(82, 215, 201, 0.18), transparent 30%),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0, rgba(255, 255, 255, 0.03) 1px, transparent 1px, transparent 18px),
-        linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 54%, #050608 100%);
-      background-size: auto, auto, 18px 18px, auto;
+        radial-gradient(circle at top, rgba(122, 101, 219, 0.28), transparent 42%),
+        linear-gradient(180deg, #111111 0%, #000000 100%);
+      background-color: var(--bg-1);
+    }
+
+    a,
+    a * {
+      pointer-events: none !important;
+      cursor: default !important;
     }
 
     #event-card {
-      width: 1120px;
-      margin: 0 auto;
       position: relative;
+      width: 1560px;
+      max-width: calc(100vw - 48px);
+      margin: 0 auto;
       overflow: hidden;
-      border-radius: 34px;
       border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 38px;
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
-        linear-gradient(145deg, rgba(255, 154, 61, 0.08), rgba(82, 215, 201, 0.06) 34%, rgba(0, 0, 0, 0.3) 72%);
+        linear-gradient(160deg, rgba(122, 101, 219, 0.22) 0%, rgba(122, 101, 219, 0.05) 30%, rgba(0, 0, 0, 0.97) 100%);
       box-shadow:
-        0 30px 90px rgba(0, 0, 0, 0.48),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        0 32px 84px rgba(0, 0, 0, 0.56),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
 
     #event-card::before {
@@ -69,192 +74,168 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(circle at 12% 16%, rgba(255, 193, 102, 0.12), transparent 24%),
-        radial-gradient(circle at 88% 24%, rgba(82, 215, 201, 0.14), transparent 26%);
+        linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 24%),
+        linear-gradient(180deg, transparent, rgba(122, 101, 219, 0.12));
       pointer-events: none;
     }
 
-    .topbar {
+    .hero-wrap {
       position: relative;
+      padding: 24px 24px 0;
+    }
+
+    .hero-banner {
+      position: relative;
+      aspect-ratio: 1920 / 500;
+      min-height: 0;
+      overflow: hidden;
+      border-radius: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background:
+        linear-gradient(135deg, rgba(122, 101, 219, 0.24), rgba(255, 255, 255, 0.04)),
+        rgba(0, 0, 0, 0.34);
+      box-shadow:
+        0 22px 54px rgba(0, 0, 0, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-banner img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      transform: scale(1.005);
+    }
+
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.68)),
+        linear-gradient(135deg, rgba(122, 101, 219, 0.36), transparent 42%),
+        linear-gradient(0deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18));
+      pointer-events: none;
+    }
+
+    .hero-topbar {
+      position: absolute;
+      top: 22px;
+      left: 26px;
+      right: 26px;
+      z-index: 2;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      gap: 18px;
-      padding: 24px 28px 0;
+      gap: 16px;
     }
 
     .eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      padding: 7px 14px;
+      padding: 9px 16px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.34);
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 13px;
+      font-weight: 800;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--muted);
+      backdrop-filter: blur(4px);
     }
 
-    .eyebrow::before {
-      content: '';
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: linear-gradient(180deg, var(--accent-strong), var(--accent));
-      box-shadow: 0 0 18px rgba(255, 154, 61, 0.58);
-    }
-
-    .stamp {
-      padding: 9px 15px;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(0, 0, 0, 0.22);
+    .hero-id {
+      padding: 12px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.38);
+      color: var(--text);
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: 0.06em;
       text-align: right;
-      color: var(--soft);
-      font-size: 12px;
-      letter-spacing: 0.08em;
+      text-shadow: 0 6px 18px rgba(0, 0, 0, 0.34);
+      backdrop-filter: blur(6px);
     }
 
-    .hero {
-      position: relative;
-      display: grid;
-      grid-template-columns: 1.16fr 0.94fr;
-      gap: 22px;
-      padding: 20px 28px 0;
-      align-items: stretch;
-    }
-
-    .hero-poster {
-      position: relative;
-      min-height: 320px;
-      border-radius: 28px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background:
-        linear-gradient(180deg, rgba(255, 154, 61, 0.12), rgba(0, 0, 0, 0.12)),
-        rgba(255, 255, 255, 0.02);
-    }
-
-    .hero-poster img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .hero-poster::after {
-      content: '';
+    .hero-center {
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(7, 7, 8, 0.82)),
-        linear-gradient(120deg, rgba(255, 154, 61, 0.14), transparent 36%);
-    }
-
-    .poster-badge {
-      position: absolute;
-      left: 18px;
-      top: 18px;
       z-index: 2;
-      padding: 8px 12px;
-      border-radius: 14px;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      font-size: 12px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .hero-copy {
-      position: relative;
-      padding: 24px;
-      border-radius: 28px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background:
-        linear-gradient(150deg, rgba(255, 154, 61, 0.16), rgba(82, 215, 201, 0.1) 44%, rgba(255, 255, 255, 0.03) 100%);
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        0 16px 36px rgba(0, 0, 0, 0.14);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 82px 72px 106px;
+      text-align: center;
     }
 
     .event-type {
       display: inline-flex;
       align-items: center;
-      padding: 7px 14px;
+      justify-content: center;
+      padding: 10px 18px;
       border-radius: 999px;
       border: 1px solid rgba(255, 255, 255, 0.14);
-      background: rgba(255, 255, 255, 0.06);
-      font-size: 12px;
-      letter-spacing: 0.12em;
-      color: var(--muted);
+      background: rgba(0, 0, 0, 0.32);
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
+      backdrop-filter: blur(4px);
     }
 
     .event-name {
-      margin: 18px 0 12px;
-      font-size: 40px;
-      line-height: 1.14;
-      font-weight: 700;
-      letter-spacing: 0.01em;
-    }
-
-    .meta-line {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.7;
+      margin: 22px 0 18px;
+      font-size: 72px;
+      font-weight: 900;
+      line-height: 1.02;
+      letter-spacing: 0.02em;
+      text-shadow: 0 10px 30px rgba(0, 0, 0, 0.42);
       word-break: break-word;
     }
 
-    .meta-line strong {
-      color: var(--text);
-    }
-
-    .headline-strip {
-      margin-top: 18px;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .hero-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       gap: 12px;
+      width: 100%;
     }
 
-    .headline-item {
-      padding: 14px 15px;
-      border-radius: 18px;
-      background: rgba(0, 0, 0, 0.18);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .headline-item span {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 11px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--soft);
-    }
-
-    .headline-item strong {
-      display: block;
-      font-size: 18px;
-      line-height: 1.45;
+    .hero-meta-item {
+      min-width: 300px;
+      max-width: 100%;
+      padding: 14px 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.34);
       color: var(--text);
+      font-size: 30px;
+      font-weight: 900;
+      line-height: 1.2;
+      backdrop-filter: blur(4px);
+      text-shadow: 0 8px 24px rgba(0, 0, 0, 0.36);
       word-break: break-word;
     }
 
     .content {
       position: relative;
-      padding: 24px 28px 30px;
+      padding: 24px;
     }
 
     .section {
       margin-top: 18px;
-      padding: 20px;
-      border-radius: 24px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+      padding: 24px;
+      border-radius: 28px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
     }
 
@@ -263,17 +244,128 @@
     }
 
     .section-title {
-      margin-bottom: 16px;
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.24em;
+      margin-bottom: 18px;
+      color: rgba(255, 255, 255, 0.66);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
+    }
+
+    .place-grid,
+    .overview-grid,
+    .time-grid,
+    .link-grid,
+    .stats {
+      display: grid;
+      gap: 14px;
+    }
+
+    .overview-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .place-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .time-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stats {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .place-card,
+    .overview-card,
+    .time-card,
+    .stat-card,
+    .link-card,
+    .field-card,
+    .rich-box {
+      min-width: 0;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.22);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    .place-card {
+      padding: 24px;
+    }
+
+    .place-title {
+      margin-bottom: 16px;
+      color: var(--text);
+      font-size: 36px;
+      font-weight: 900;
+      line-height: 1.15;
+    }
+
+    .place-label,
+    .field-card .label,
+    .link-card .label,
+    .time-pill span {
+      display: block;
+      margin-bottom: 10px;
+      color: rgba(255, 255, 255, 0.56);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .place-city {
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1.15;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .place-note {
+      margin-top: 12px;
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 1.45;
+      color: var(--muted);
+      word-break: break-word;
+    }
+
+    .time-card {
+      padding: 24px;
+      background: linear-gradient(140deg, rgba(122, 101, 219, 0.22), rgba(255, 255, 255, 0.04));
+    }
+
+    .time-card h3 {
+      margin: 0 0 14px;
+      color: var(--text);
+      font-size: 30px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .time-pair {
+      display: grid;
+      gap: 10px;
+    }
+
+    .time-pill {
+      padding: 16px 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.24);
+      color: var(--text);
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 1.35;
+      word-break: break-word;
     }
 
     .field-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
+      gap: 14px;
     }
 
     .field-grid.two {
@@ -285,177 +377,117 @@
     }
 
     .field-card {
-      min-width: 0;
-      padding: 14px 15px;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: var(--panel);
+      padding: 22px;
     }
 
-    .field-card .label {
-      margin-bottom: 7px;
-      color: var(--soft);
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+    .overview-card {
+      padding: 24px;
+      background: rgba(0, 0, 0, 0.22);
     }
 
-    .field-card .value {
-      font-size: 16px;
-      line-height: 1.55;
+    .overview-card .label {
+      display: block;
+      margin-bottom: 16px;
       color: var(--text);
+      font-size: 36px;
+      font-weight: 900;
+      line-height: 1.15;
+    }
+
+    .overview-card .value {
+      color: var(--text);
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1.15;
       word-break: break-word;
     }
 
-    .time-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .time-card {
-      padding: 18px;
-      border-radius: 22px;
-      background:
-        linear-gradient(140deg, rgba(255, 154, 61, 0.12), rgba(82, 215, 201, 0.08));
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .time-card h3 {
-      margin: 0 0 12px;
-      font-size: 13px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .time-pair {
-      display: grid;
-      gap: 8px;
-    }
-
-    .time-pill {
-      padding: 12px 14px;
-      border-radius: 16px;
-      background: rgba(0, 0, 0, 0.18);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 15px;
+    .field-card .value {
+      color: var(--text);
+      font-size: 28px;
+      font-weight: 900;
       line-height: 1.45;
       word-break: break-word;
     }
 
-    .time-pill span {
-      display: block;
-      margin-bottom: 4px;
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--soft);
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-
     .stat-card {
-      padding: 18px 16px;
-      border-radius: 20px;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.14));
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 24px 20px;
       text-align: center;
+      background: linear-gradient(180deg, rgba(122, 101, 219, 0.2), rgba(255, 255, 255, 0.04));
     }
 
     .stat-card span {
       display: block;
-      color: var(--soft);
-      font-size: 11px;
-      letter-spacing: 0.18em;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
     }
 
     .stat-card strong {
       display: block;
-      margin-top: 8px;
-      font-size: 28px;
-      line-height: 1;
+      margin-top: 10px;
       color: var(--text);
+      font-size: 48px;
+      font-weight: 900;
+      line-height: 1;
     }
 
-    .media-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .media-card {
+    .map-card {
       position: relative;
-      min-height: 280px;
+      min-height: 680px;
       overflow: hidden;
-      border-radius: 24px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.04);
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.24);
     }
 
-    .media-card img {
+    .map-card img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
       display: block;
+      object-fit: cover;
+      object-position: center;
     }
 
-    .media-card::after {
+    .map-card::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.42));
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.24));
       pointer-events: none;
     }
 
-    .media-tag {
+    .map-tag {
       position: absolute;
-      top: 16px;
-      left: 16px;
+      top: 22px;
+      left: 22px;
       z-index: 1;
-      padding: 7px 12px;
+      padding: 10px 16px;
       border-radius: 999px;
-      background: rgba(0, 0, 0, 0.38);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      font-size: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 900;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--muted);
     }
 
     .link-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .link-card {
-      padding: 14px 15px;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      min-width: 0;
+      padding: 20px;
     }
 
-    .link-card .label {
-      margin-bottom: 8px;
-      color: var(--soft);
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .link-card a {
+    .link-card .value {
       color: var(--text);
-      text-decoration: none;
-      font-size: 14px;
-      line-height: 1.55;
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.5;
       word-break: break-all;
     }
 
@@ -468,11 +500,11 @@
     .dlc-card {
       position: relative;
       overflow: hidden;
-      min-height: 104px;
-      border-radius: 22px;
+      min-height: 120px;
+      border-radius: 24px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       background:
-        linear-gradient(135deg, rgba(255, 154, 61, 0.12), rgba(82, 215, 201, 0.06)),
+        linear-gradient(135deg, rgba(122, 101, 219, 0.22), rgba(255, 255, 255, 0.04)),
         rgba(255, 255, 255, 0.03);
     }
 
@@ -482,68 +514,70 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      opacity: 0.28;
+      opacity: 0.32;
     }
 
     .dlc-card::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(90deg, rgba(7, 9, 11, 0.9), rgba(7, 9, 11, 0.42));
+      background: linear-gradient(90deg, rgba(7, 9, 11, 0.92), rgba(7, 9, 11, 0.46));
     }
 
     .dlc-copy {
       position: relative;
       z-index: 1;
-      padding: 16px 18px;
+      padding: 20px 22px;
     }
 
     .dlc-copy strong {
       display: block;
-      font-size: 18px;
-      line-height: 1.4;
       color: var(--text);
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1.35;
     }
 
     .dlc-copy span {
       display: block;
-      margin-top: 6px;
+      margin-top: 8px;
       color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.12em;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
     .empty-note {
-      padding: 18px;
-      border-radius: 18px;
-      border: 1px dashed rgba(255, 255, 255, 0.14);
+      padding: 24px;
+      border-radius: 20px;
+      border: 1px dashed rgba(255, 255, 255, 0.16);
       background: rgba(255, 255, 255, 0.03);
       color: var(--muted);
-      font-size: 15px;
+      font-size: 20px;
+      font-weight: 800;
       line-height: 1.6;
       text-align: center;
     }
 
     .rich-box {
-      padding: 20px;
-      border-radius: 22px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.12));
+      padding: 24px;
+      background: linear-gradient(180deg, rgba(122, 101, 219, 0.12), rgba(0, 0, 0, 0.18));
     }
 
     .rich-title {
-      margin-bottom: 16px;
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.22em;
+      margin-bottom: 18px;
+      color: rgba(255, 255, 255, 0.66);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
     .rich-content {
       color: var(--text);
-      font-size: 15px;
+      font-size: 24px;
+      font-weight: 800;
       line-height: 1.72;
       word-break: break-word;
     }
@@ -560,9 +594,10 @@
     .rich-content h2,
     .rich-content h3,
     .rich-content h4 {
-      margin: 1.2em 0 0.6em;
+      margin: 1.1em 0 0.6em;
       color: var(--text);
-      line-height: 1.35;
+      font-weight: 900;
+      line-height: 1.32;
     }
 
     .rich-content p,
@@ -570,72 +605,126 @@
       color: var(--text);
     }
 
-    .rich-content a {
-      color: var(--accent-cool);
+    .rich-content a,
+    .rich-content .disabled-link {
+      color: #c6bcff;
       text-decoration: none;
     }
 
     .rich-content img {
       max-width: 100%;
-      border-radius: 16px;
-      margin: 12px 0;
-      display: block;
+      border-radius: 22px;
+      margin: 14px 0;
+      display: none;
       box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
     }
 
     .rich-content blockquote {
-      margin: 14px 0;
-      padding: 12px 14px 12px 16px;
-      border-left: 3px solid var(--accent-cool);
-      border-radius: 0 14px 14px 0;
-      background: rgba(82, 215, 201, 0.08);
+      margin: 16px 0;
+      padding: 14px 16px 14px 18px;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 16px 16px 0;
+      background: rgba(122, 101, 219, 0.14);
       color: var(--muted);
     }
 
     .rich-content code {
       padding: 2px 6px;
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.08);
       font-size: 0.92em;
+    }
+
+    @media (max-width: 1180px) {
+      .event-name {
+        font-size: 56px;
+      }
+
+      .hero-meta-item {
+        font-size: 24px;
+      }
+
+      .field-grid.three,
+      .overview-grid,
+      .stats,
+      .dlc-wrap,
+      .field-grid.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 860px) {
+      body {
+        padding: 12px;
+      }
+
+      #event-card {
+        max-width: calc(100vw - 24px);
+      }
+
+      .hero-banner {
+        aspect-ratio: 1920 / 500;
+        min-height: 220px;
+      }
+
+      .hero-center {
+        padding: 60px 22px 118px;
+      }
+
+      .event-name {
+        font-size: 40px;
+      }
+
+      .hero-meta-item {
+        min-width: 0;
+        width: 100%;
+        font-size: 22px;
+      }
+
+      .place-grid,
+      .overview-grid,
+      .time-grid,
+      .stats,
+      .field-grid.two,
+      .field-grid.three,
+      .link-grid,
+      .dlc-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .place-city {
+        font-size: 34px;
+      }
+
+      .overview-card .label {
+        font-size: 30px;
+      }
+
+      .overview-card .value {
+        font-size: 34px;
+      }
+
+      .map-card {
+        min-height: 380px;
+      }
     }
   </style>
 </head>
 <body>
   <div id="event-card">
-    <div class="topbar">
-      <div class="eyebrow">Prime TMP Event</div>
-      <div class="stamp" id="event-stamp">活动档案</div>
-    </div>
-
-    <div class="hero">
-      <div class="hero-poster" id="hero-poster-box">
-        <div class="poster-badge">Banner</div>
+    <div class="hero-wrap">
+      <div class="hero-banner" id="hero-poster-box">
         <img id="hero-poster" src="" alt="banner">
-      </div>
-
-      <div class="hero-copy">
-        <div class="event-type" id="event-type">EVENT</div>
-        <div class="event-name" id="event-name">-</div>
-        <div class="meta-line" id="event-id-line">活动 ID：-</div>
-        <div class="meta-line" id="event-organizer-line">VTC：-</div>
-        <div class="meta-line" id="event-link-line">活动链接：-</div>
-
-        <div class="headline-strip">
-          <div class="headline-item">
-            <span>游戏</span>
-            <strong id="event-game">-</strong>
-          </div>
-          <div class="headline-item">
-            <span>服务器</span>
-            <strong id="event-server">-</strong>
-          </div>
-          <div class="headline-item">
-            <span>语言</span>
-            <strong id="event-language">-</strong>
-          </div>
-          <div class="headline-item">
-            <span>活动类型</span>
-            <strong id="event-type-name">-</strong>
+        <div class="hero-topbar">
+          <div class="eyebrow">Prime TMP Event</div>
+          <div class="hero-id" id="event-id-line">ID:-</div>
+        </div>
+        <div class="hero-center">
+          <div class="event-type" id="event-type">EVENT</div>
+          <div class="event-name" id="event-name">-</div>
+          <div class="hero-meta">
+            <div class="hero-meta-item" id="event-organizer-line">-</div>
+            <div class="hero-meta-item" id="vtc-id-line">VTCID: -</div>
           </div>
         </div>
       </div>
@@ -643,23 +732,41 @@
 
     <div class="content">
       <div class="section">
+        <div class="section-title">活动概览</div>
+        <div class="overview-grid">
+          <div class="overview-card">
+            <div class="label">游戏</div>
+            <div class="value" id="event-game">-</div>
+          </div>
+          <div class="overview-card">
+            <div class="label">服务器</div>
+            <div class="value" id="event-server">-</div>
+          </div>
+          <div class="overview-card">
+            <div class="label">语言</div>
+            <div class="value" id="event-language">-</div>
+          </div>
+          <div class="overview-card">
+            <div class="label">活动类型</div>
+            <div class="value" id="event-type-name">-</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
         <div class="section-title">地点信息</div>
-        <div class="field-grid">
-          <div class="field-card">
-            <div class="label">出发城市</div>
-            <div class="value" id="departure-city">-</div>
+        <div class="place-grid">
+          <div class="place-card">
+            <div class="place-title">出发地点</div>
+            <span class="place-label">地点</span>
+            <div class="place-city" id="departure-city">-</div>
+            <div class="place-note" id="departure-location">-</div>
           </div>
-          <div class="field-card">
-            <div class="label">出发地点</div>
-            <div class="value" id="departure-location">-</div>
-          </div>
-          <div class="field-card">
-            <div class="label">到达城市</div>
-            <div class="value" id="arrive-city">-</div>
-          </div>
-          <div class="field-card">
-            <div class="label">到达地点</div>
-            <div class="value" id="arrive-location">-</div>
+          <div class="place-card">
+            <div class="place-title">到达地点</div>
+            <span class="place-label">地点</span>
+            <div class="place-city" id="arrive-city">-</div>
+            <div class="place-note" id="arrive-location">-</div>
           </div>
         </div>
       </div>
@@ -680,7 +787,6 @@
               </div>
             </div>
           </div>
-
           <div class="time-card">
             <h3>发车时间</h3>
             <div class="time-pair">
@@ -699,7 +805,7 @@
 
       <div class="section">
         <div class="section-title">VTC 与参与情况</div>
-        <div class="field-grid three" style="margin-bottom: 12px;">
+        <div class="field-grid three" style="margin-bottom: 14px;">
           <div class="field-card">
             <div class="label">VTC ID</div>
             <div class="value" id="vtc-id">-</div>
@@ -730,22 +836,11 @@
       </div>
 
       <div class="section" id="media-section">
-        <div class="section-title">活动视觉</div>
-        <div class="media-grid">
-          <div class="media-card" id="banner-card">
-            <div class="media-tag">活动海报</div>
-            <img id="banner-image" src="" alt="banner">
-          </div>
-          <div class="media-card" id="map-card">
-            <div class="media-tag">路线图</div>
-            <img id="map-image" src="" alt="map">
-          </div>
+        <div class="section-title">路线图</div>
+        <div class="map-card" id="map-card">
+          <div class="map-tag">路线图</div>
+          <img id="map-image" src="" alt="map">
         </div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">链接</div>
-        <div class="link-grid" id="link-grid"></div>
       </div>
 
       <div class="section">
@@ -816,7 +911,9 @@
     }
 
     function setText(id, value) {
-      document.getElementById(id).textContent = value || '-';
+      const element = document.getElementById(id);
+      if (!element) return;
+      element.textContent = value || '-';
     }
 
     function setImage(id, url, boxId) {
@@ -832,6 +929,16 @@
       };
     }
 
+    function disableLinks(root) {
+      if (!root) return;
+      root.querySelectorAll('a').forEach((anchor) => {
+        anchor.removeAttribute('href');
+        anchor.removeAttribute('target');
+        anchor.removeAttribute('rel');
+        anchor.classList.add('disabled-link');
+      });
+    }
+
     function setRich(boxId, contentId, html) {
       const box = document.getElementById(boxId);
       const content = document.getElementById(contentId);
@@ -840,51 +947,7 @@
         return;
       }
       content.innerHTML = html;
-    }
-
-    function createLinkCard(label, url) {
-      const card = document.createElement('div');
-      card.className = 'link-card';
-
-      const title = document.createElement('div');
-      title.className = 'label';
-      title.textContent = label;
-
-      const anchor = document.createElement('a');
-      anchor.href = url;
-      anchor.target = '_blank';
-      anchor.rel = 'noreferrer noopener';
-      anchor.textContent = url;
-
-      card.appendChild(title);
-      card.appendChild(anchor);
-      return card;
-    }
-
-    function renderLinks(data) {
-      const grid = document.getElementById('link-grid');
-      grid.innerHTML = '';
-
-      const links = [
-        ['活动链接', data.url],
-        ['活动海报', data.banner],
-        ['路线图', data.map],
-        ['语音链接', data.voiceLink],
-        ['外部链接', data.externalLink]
-      ].filter(([, url]) => !!url);
-
-      if (!links.length) {
-        const empty = document.createElement('div');
-        empty.className = 'empty-note';
-        empty.style.gridColumn = '1 / -1';
-        empty.textContent = '这个活动没有额外可用链接。';
-        grid.appendChild(empty);
-        return;
-      }
-
-      links.forEach(([label, url]) => {
-        grid.appendChild(createLinkCard(label, url));
-      });
+      disableLinks(content);
     }
 
     function renderDlcs(dlcs) {
@@ -940,20 +1003,21 @@
       setText('stat-unsure', String(data.attendances && data.attendances.unsure != null ? data.attendances.unsure : '-'));
       setText('stat-vtcs', String(data.attendances && data.attendances.vtcs != null ? data.attendances.vtcs : '-'));
 
-      setText('event-id-line', `活动 ID：${data.id || '-'}${data.slug ? ' ｜ ' + data.slug : ''}`);
-      setText('event-organizer-line', `VTC：${data.vtcName || '-'} ｜ VTC ID：${data.vtcId || '-'} ｜ 主办用户：${data.user && data.user.username ? data.user.username : '-'}`);
-      setText('event-link-line', `活动链接：${data.url || '-'}`);
-      setText('event-stamp', `${data.featured ? data.featured + ' ｜ ' : ''}${data.serverName || '活动档案'}`);
+      setText('event-id-line', `ID:${data.id || '-'}`);
+      setText('event-organizer-line', data.vtcName || '-');
+      setText('vtc-id-line', data.vtcId ? String(data.vtcId) : '-');
 
       setImage('hero-poster', data.banner || data.map || '', 'hero-poster-box');
-      setImage('banner-image', data.banner || '', 'banner-card');
       setImage('map-image', data.map || '', 'map-card');
 
       if (!data.banner && !data.map) {
+        document.getElementById('hero-poster-box').style.display = 'none';
+      }
+
+      if (!data.map) {
         document.getElementById('media-section').style.display = 'none';
       }
 
-      renderLinks(data);
       renderDlcs(data.dlcs);
       setRich('description-box', 'description-content', data.descriptionHtml);
       setRich('rule-box', 'rule-content', data.ruleHtml);
