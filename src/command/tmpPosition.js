@@ -74,6 +74,8 @@ module.exports = async (ctx, cfg, session, tmpId) => {
       axisX: playerMapInfo.data.x,
       axisY: playerMapInfo.data.y,
       tmpId,
+      heading: playerMapInfo.data.heading ?? playerMapInfo.data.rotation ?? null,
+      rotation: playerMapInfo.data.rotation ?? playerMapInfo.data.heading ?? null,
     });
 
     // promods服ID集合

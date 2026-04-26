@@ -97,8 +97,11 @@ module.exports = async (ctx, cfg, session, tmpId) => {
       );
       data.onlineX = playerMapInfo.data.x;
       data.onlineY = playerMapInfo.data.y;
-      data.onlineMapType =
-        playerMapInfo.data.serverDetails.id === 50 ? "promods" : "ets";
+      data.onlineMapType = [50, 51].includes(
+        playerMapInfo.data.serverDetails.id ?? playerMapInfo.data.server,
+      )
+        ? "promods"
+        : "ets";
     }
   }
   data.isBan = playerInfo.data.isBan;

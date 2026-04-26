@@ -321,6 +321,33 @@
       zoomControl: false
     });
 
+    function getPlayerHeading(player) {
+      const heading = player.heading ?? player.rotation;
+      return Number.isFinite(Number(heading)) ? Number(heading) : null;
+    }
+
+    function addDirectionIndicator(latlng, heading, fillColor) {
+      const center = map.latLngToLayerPoint(latlng);
+      const radians = Number(heading) * Math.PI / 180;
+      const direction = L.point(Math.sin(radians), -Math.cos(radians));
+      const normal = L.point(Math.cos(radians), Math.sin(radians));
+      const tip = center.add(direction.multiplyBy(12));
+      const left = center.add(direction.multiplyBy(-4)).add(normal.multiplyBy(4.5));
+      const right = center.add(direction.multiplyBy(-4)).add(normal.multiplyBy(-4.5));
+
+      return L.polygon([
+        map.layerPointToLatLng(tip),
+        map.layerPointToLatLng(left),
+        map.layerPointToLatLng(right)
+      ], {
+        color: '#000000',
+        weight: 1.5,
+        fillColor,
+        fillOpacity: 0.95,
+        interactive: false
+      }).addTo(map);
+    }
+
     function setData(data) {
       let bounds = L.latLngBounds(
         map.unproject([0, mapConfig[data.mapType].bounds.y], mapConfig[data.mapType].maxZoom),
@@ -350,14 +377,25 @@
       document.getElementsByClassName('real-name')[0].innerText = data.realName;
 
       for (let player of data.playerList) {
-        L.circleMarker(map.unproject(mapConfig[data.mapType].calculateMapCoordinate(player.axisX, player.axisY), 8), {
+        const latlng = map.unproject(mapConfig[data.mapType].calculateMapCoordinate(player.axisX, player.axisY), 8);
+        const isCurrentPlayer = data.currentPlayerId.toString() === player.tmpId.toString();
+        const fillColor = isCurrentPlayer ? '#7A65DB' : '#ffffff';
+        const marker = L.circleMarker(latlng, {
           color: '#000000',
           weight: 2,
-          fillColor: data.currentPlayerId.toString() === player.tmpId.toString() ? '#7A65DB' : '#ffffff',
+          fillColor,
           fillOpacity: 1,
           radius: 5,
-          zIndex: data.currentPlayerId.toString() === player.tmpId.toString() ? 1000 : undefined
+          zIndex: isCurrentPlayer ? 1000 : undefined
         }).addTo(map);
+        const heading = getPlayerHeading(player);
+        if (heading !== null) {
+          const directionIndicator = addDirectionIndicator(latlng, heading, fillColor);
+          if (isCurrentPlayer) {
+            directionIndicator.bringToFront();
+            marker.bringToFront();
+          }
+        }
       }
 
       map.setView(map.unproject(mapConfig[data.mapType].calculateMapCoordinate(data.centerX, data.centerY + 80), 8), 7);
