@@ -1,4 +1,5 @@
 const BASE_API = 'https://api.codetabs.com/v1/proxy/?quest=https://api.truckersmp.com/v2'
+const { logRequestSuccess, logRequestError } = require('../util/requestLog')
 
 function parseErrorFlag (value) {
   if (typeof value === 'boolean') {
@@ -15,48 +16,54 @@ function parseErrorFlag (value) {
   return Boolean(value)
 }
 
-async function request (http, path) {
+async function request (http, name, path) {
+  const url = `${BASE_API}${path}`
   let result = null
   try {
-    result = await http.get(`${BASE_API}${path}`)
-  } catch {
+    result = await http.get(url)
+  } catch (error) {
+    logRequestError(name, url, error)
     return {
       error: true
     }
   }
 
   if (!result || typeof result !== 'object') {
+    logRequestError(name, url, {
+      reason: 'invalid response'
+    })
     return {
       error: true
     }
   }
 
   const error = parseErrorFlag(result.error)
-  return {
+  const data = {
     error,
     data: error ? null : result.response
   }
+
+  if (data.error) {
+    logRequestError(name, url, {
+      apiError: result.error
+    })
+  } else {
+    logRequestSuccess(name, url)
+  }
+
+  return data
 }
 
 module.exports = {
-  /**
-   * 根据活动 ID 查询活动详情。
-   */
   async eventById (http, eventId) {
-    return await request(http, `/events/${eventId}`)
+    return await request(http, 'truckersMPEventApi.eventById', `/events/${eventId}`)
   },
 
-  /**
-   * 查询指定 VTC 创建的活动列表。
-   */
   async vtcEvents (http, vtcId) {
-    return await request(http, `/vtc/${vtcId}/events`)
+    return await request(http, 'truckersMPEventApi.vtcEvents', `/vtc/${vtcId}/events`)
   },
 
-  /**
-   * 查询指定 VTC 参与的活动列表。
-   */
   async vtcEventsAttending (http, vtcId) {
-    return await request(http, `/vtc/${vtcId}/events/attending`)
+    return await request(http, 'truckersMPEventApi.vtcEventsAttending', `/vtc/${vtcId}/events/attending`)
   }
 }

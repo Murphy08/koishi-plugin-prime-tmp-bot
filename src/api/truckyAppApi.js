@@ -1,48 +1,64 @@
 const BASE_API = 'https://api.codetabs.com/v1/proxy/?quest=https://api.truckyapp.com'
+const { logRequestSuccess, logRequestError } = require('../util/requestLog')
 
 module.exports = {
-  /**
-   * 查询线上信息
-   */
   async online (http, tmpId) {
+    const url = `${BASE_API}/v3/map/online?playerID=${tmpId}`
     let result = null
     try {
-      result = await http.get(`${BASE_API}/v3/map/online?playerID=${tmpId}`)
-    } catch {
+      result = await http.get(url)
+    } catch (error) {
+      logRequestError('truckyAppApi.online', url, error)
       return {
         error: true
       }
     }
 
-    // 拼接返回数据
     let data = {
       error: !result || !result.response || result.response.error
     }
     if (!data.error) {
       data.data = result.response
     }
+
+    if (data.error) {
+      logRequestError('truckyAppApi.online', url, {
+        apiError: result && result.response && result.response.error
+      })
+    } else {
+      logRequestSuccess('truckyAppApi.online', url)
+    }
+
     return data
   },
-  /**
-   * 查询热门交通数据
-   */
+
   async trafficTop (http, serverName) {
+    const url = `${BASE_API}/v2/traffic/top?game=ets2&server=${serverName}`
     let result = null
     try {
-      result = await http.get(`${BASE_API}/v2/traffic/top?game=ets2&server=${serverName}`)
-    } catch {
+      result = await http.get(url)
+    } catch (error) {
+      logRequestError('truckyAppApi.trafficTop', url, error)
       return {
         error: true
       }
     }
 
-    // 拼接返回数据
     let data = {
       error: !result || !result.response || result.response.length <= 0
     }
     if (!data.error) {
       data.data = result.response
     }
+
+    if (data.error) {
+      logRequestError('truckyAppApi.trafficTop', url, {
+        responseLength: result && result.response && result.response.length
+      })
+    } else {
+      logRequestSuccess('truckyAppApi.trafficTop', url)
+    }
+
     return data
   }
 }

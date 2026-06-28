@@ -1,115 +1,71 @@
 const BASE_API = 'https://api.codetabs.com/v1/proxy/?quest=https://api.truckersmp.com/v2'
+const { logRequestSuccess, logRequestError } = require('../util/requestLog')
+
+async function request (http, name, path, resolveData) {
+  const url = `${BASE_API}${path}`
+  let result = null
+  try {
+    result = await http.get(url)
+  } catch (error) {
+    logRequestError(name, url, error)
+    return {
+      error: true
+    }
+  }
+
+  let data = null
+  try {
+    data = resolveData(result)
+  } catch (error) {
+    logRequestError(name, url, error)
+    return {
+      error: true
+    }
+  }
+
+  if (data.error) {
+    logRequestError(name, url, {
+      apiError: result && result.error
+    })
+  } else {
+    logRequestSuccess(name, url)
+  }
+
+  return data
+}
+
+function resolveTruckersMpResponse (result) {
+  let data = {
+    error: typeof result.error === 'boolean' ? result.error : JSON.parse(result.error)
+  }
+  if (!data.error) {
+    data.data = result.response
+  }
+
+  return data
+}
 
 module.exports = {
-  /**
-   * 查询玩家信息
-   */
   async player (http, tmpId) {
-    let result = null
-    try {
-      result = await http.get(`${BASE_API}/player/${tmpId}`)
-    } catch {
-      return {
-        error: true
-      }
-    }
-
-    // 拼接返回数据
-    let data = {
-      error: JSON.parse(result.error)
-    }
-    if (!data.error) {
-      data.data = result.response
-    }
-
-    return data
+    return await request(http, 'truckersMpApi.player', `/player/${tmpId}`, resolveTruckersMpResponse)
   },
-  /**
-   * 查询服务器列表
-   */
+
   async servers (http) {
-    let result = null
-    try {
-      result = await http.get(`${BASE_API}/servers`)
-    } catch {
-      return {
-        error: true
-      }
-    }
-
-    // 拼接返回数据
-    let data = {
-      error: JSON.parse(result.error)
-    }
-    if (!data.error) {
-      data.data = result.response
-    }
-
-    return data
+    return await request(http, 'truckersMpApi.servers', '/servers', resolveTruckersMpResponse)
   },
-  /**
-   * 查询玩家封禁信息
-   */
+
   async bans (http, tmpId) {
-    let result = null
-    try {
-      result = await http.get(`${BASE_API}/bans/${tmpId}`)
-    } catch {
-      return {
-        error: true
-      }
-    }
-
-    // 拼接返回数据
-    let data = {
-      error: JSON.parse(result.error)
-    }
-    if (!data.error) {
-      data.data = result.response
-    }
-
-    return data
+    return await request(http, 'truckersMpApi.bans', `/bans/${tmpId}`, resolveTruckersMpResponse)
   },
-  /**
-   * 游戏版本
-   */
-  async version (http) {
-    let result = null
-    try {
-      result = await http.get(`${BASE_API}/version`)
-    } catch {
-      return {
-        error: true
-      }
-    }
 
-    // 拼接返回数据
-    return {
+  async version (http) {
+    return await request(http, 'truckersMpApi.version', '/version', (result) => ({
       error: false,
       data: result
-    }
+    }))
   },
-  /**
-   * 查询车队成员信息
-   */
+
   async vtcMember (http, vtcId, memberId) {
-    let result = null
-    try {
-      result = await http.get(`${BASE_API}/vtc/${vtcId}/member/${memberId}`)
-    } catch {
-      return {
-        error: true
-      }
-    }
-
-    // 拼接返回数据
-    let data = {
-      error: JSON.parse(result.error)
-    }
-    if (!data.error) {
-      data.data = result.response
-    }
-
-    return data
+    return await request(http, 'truckersMpApi.vtcMember', `/vtc/${vtcId}/member/${memberId}`, resolveTruckersMpResponse)
   }
 }
