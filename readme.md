@@ -117,6 +117,7 @@ Prime Logistics 中国社区定制版 TruckersMP 查询插件。
 
 本插件基于原项目 `koishi-plugin-tmp-bot` 修改而来。
 原项目作者 / 维护者信息保留：`79887143`，原 README 联系方式：`QQ 3523283907`。
+原项目信息也记录在 [NOTICE](./NOTICE) 中，便于随包分发时保留来源说明。
 
 当前主题定制与维护：`Murphy08` / Prime Logistics 中国社区。
 
