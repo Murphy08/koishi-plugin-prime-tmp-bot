@@ -113,9 +113,10 @@ module.exports = async (ctx, cfg, serverName) => {
     mapType: serverInfo.mapType,
     trafficList: [],
     playerCoordinateList:
-      mapData.error && mapData.data
-        ? []
-        : mapData.data.map((item) => [item.axisX, item.axisY]),
+      !mapData.error && Array.isArray(mapData.data)
+        ? mapData.data.map((item) => [item.axisX, item.axisY])
+        : [],
+    heatmapMax: 1,
   };
   for (const traffic of trafficData.data) {
     data.trafficList.push({
@@ -136,7 +137,7 @@ module.exports = async (ctx, cfg, serverName) => {
   let page;
   try {
     page = await ctx.puppeteer.page();
-    await page.setViewport({ width: 999, height: 1033, deviceScaleFactor: 2 });
+    await page.setViewport({ width: 1000, height: 1033, deviceScaleFactor: 1.5 });
     await page.goto(
       `file:///${resolve(__dirname, "../../resource/traffic.html")}`,
     );

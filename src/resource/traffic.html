@@ -343,7 +343,7 @@
       map.fitBounds(bounds);
 
       let heatmapLayer = new HeatmapOverlay({
-        radius: 3,
+        radius: 5,
         maxOpacity: 0.85,
         scaleRadius: true,
         useLocalExtrema: true,
@@ -360,14 +360,14 @@
       map.addLayer(heatmapLayer);
 
       let heatmapData = [];
-      for (const coordinate of data.playerCoordinateList) {
+      for (const coordinate of (data.playerCoordinateList || [])) {
         let unprojected = map.unproject(mapConfig[data.mapType].calculateMapCoordinate(coordinate[0], coordinate[1]), 8);
         heatmapData.push({ lat: unprojected.lat, lng: unprojected.lng, count: 1 });
       }
 
       heatmapLayer.setData({
         min: 1,
-        max: 5000,
+        max: data.heatmapMax || 1,
         data: heatmapData
       });
 

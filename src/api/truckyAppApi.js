@@ -1,4 +1,5 @@
-const BASE_API = 'https://api.codetabs.com/v1/proxy/?quest=https://api.truckyapp.com'
+const BASE_API = 'https://api.truckyapp.com'
+const HEADERS = { headers: { 'User-Agent': 'koishi-plugin-tmp-bot' } }
 const { logRequestSuccess, logRequestError } = require('../util/requestLog')
 
 module.exports = {
@@ -6,7 +7,7 @@ module.exports = {
     const url = `${BASE_API}/v3/map/online?playerID=${tmpId}`
     let result = null
     try {
-      result = await http.get(url)
+      result = await http.get(url, HEADERS)
     } catch (error) {
       logRequestError('truckyAppApi.online', url, error)
       return {
@@ -36,7 +37,7 @@ module.exports = {
     const url = `${BASE_API}/v2/traffic/top?game=ets2&server=${serverName}`
     let result = null
     try {
-      result = await http.get(url)
+      result = await http.get(url, HEADERS)
     } catch (error) {
       logRequestError('truckyAppApi.trafficTop', url, error)
       return {

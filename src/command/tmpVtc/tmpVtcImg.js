@@ -43,7 +43,7 @@ module.exports = async (ctx, cfg, session, vtcId) => {
   let page
   try {
     page = await ctx.puppeteer.page()
-    await page.setViewport({ width: 419, height: 900, deviceScaleFactor: 2 })
+    await page.setViewport({ width: 419, height: 900, deviceScaleFactor: 1.5 })
     await page.goto(`file:///${resolve(__dirname, '../../resource/vtc-query.html')}`)
     await page.evaluate(`init(${JSON.stringify(data)})`)
     await common.waitForPageRender(page)

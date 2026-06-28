@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Server List</title>
+  <style>
+    @font-face {
+      font-family: 'segui-emj';
+      src: url('./package/SEGUIEMJ.TTF');
+    }
+
+    :root {
+      --accent: #7A65DB;
+      --accent-soft: rgba(122, 101, 219, 0.18);
+      --accent-line: rgba(122, 101, 219, 0.42);
+      --text: #ffffff;
+      --muted: rgba(255, 255, 255, 0.68);
+      --line: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background:
+        radial-gradient(circle at top, rgba(122, 101, 219, 0.28), transparent 42%),
+        linear-gradient(180deg, #111111 0%, #000000 100%);
+      color: var(--text);
+      font-family: 'segui-emj', 'Segoe UI', sans-serif;
+    }
+
+    #container {
+      width: 600px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(160deg, rgba(122, 101, 219, 0.22) 0%, rgba(122, 101, 219, 0.05) 30%, rgba(0, 0, 0, 0.97) 100%);
+      box-shadow:
+        0 24px 52px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .header {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 22px 24px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(122, 101, 219, 0.9), transparent);
+    }
+
+    .kicker {
+      display: inline-flex;
+      padding: 4px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .title {
+      margin-top: 12px;
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .logo {
+      width: 62px;
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow:
+        0 12px 26px rgba(122, 101, 219, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .logo img {
+      width: 46px;
+      height: 46px;
+      object-fit: contain;
+    }
+
+    .server-list {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .server-card {
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .server-info {
+      padding: 13px 14px 10px;
+    }
+
+    .server-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .server-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .status-indicator {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status-indicator.online {
+      background: #32d583;
+      box-shadow: 0 0 12px rgba(50, 213, 131, 0.55);
+    }
+
+    .status-indicator.offline {
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .server-name {
+      min-width: 0;
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .player-count {
+      flex-shrink: 0;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 12px;
+    }
+
+    .player-count .num {
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .feature,
+    .queue-badge {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .queue-badge {
+      color: #fdb022;
+    }
+
+    .chart-area {
+      height: 42px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .chart-area svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div class="header">
+      <div>
+        <div class="kicker">Prime Logistics</div>
+        <div class="title">TruckersMP Servers</div>
+        <div class="subtitle">Live server status and population trend</div>
+      </div>
+      <div class="logo">
+        <img src="./package/img/logo2.png" alt="Logo">
+      </div>
+    </div>
+
+    <div class="server-list" id="server-list"></div>
+  </div>
+
+  <script>
+    function buildChartSVG(data, width, height, maxPlayer) {
+      const padTop = 3;
+      const chartH = height - padTop;
+      const dataMax = Math.max(...data, 1);
+      const max = Math.min(maxPlayer || dataMax, (maxPlayer || dataMax) * 0.12 + dataMax);
+      const step = width / Math.max(data.length - 1, 1);
+      const points = data.map((value, index) => {
+        const x = index * step;
+        const y = padTop + chartH - (value / max) * chartH;
+        return [x, y];
+      });
+      const lineD = points.map((point, index) => index === 0 ? `M${point[0]},${point[1]}` : `L${point[0]},${point[1]}`).join(' ');
+      const areaD = `${lineD} L${points[points.length - 1][0]},${padTop + chartH} L${points[0][0]},${padTop + chartH} Z`;
+      const gid = 'g' + Math.random().toString(36).slice(2, 8);
+
+      return `
+        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(122,101,219,0.45)"/>
+              <stop offset="100%" stop-color="rgba(122,101,219,0.02)"/>
+            </linearGradient>
+          </defs>
+          <path d="${areaD}" fill="url(#${gid})"/>
+          <path d="${lineD}" fill="none" stroke="#7A65DB" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>`;
+    }
+
+    function parseTime(str) {
+      const [datePart, timePart = '00:00:00'] = String(str || '').trim().replace('T', ' ').split(' ');
+      const [year, month, day] = datePart.split('-').map(Number);
+      const [hour = 0, minute = 0] = timePart.split(':').map(Number);
+      return Date.UTC(year, month - 1, day, hour, minute, 0) - 8 * 3600000;
+    }
+
+    function normalizeHistory(playerHistory) {
+      const slotCount = 288;
+      const slotMs = 300000;
+      if (!Array.isArray(playerHistory) || !playerHistory.length) return [];
+
+      const currentSlot = Math.floor(Date.now() / slotMs) * slotMs;
+      const dataMap = {};
+      for (const item of playerHistory) {
+        const ts = parseTime(item.updateTime);
+        if (Number.isNaN(ts)) continue;
+        dataMap[Math.floor(ts / slotMs) * slotMs] = item.playerCount;
+      }
+
+      const result = [];
+      for (let i = 0; i < slotCount; i++) {
+        const slotTime = currentSlot - (slotCount - 1 - i) * slotMs;
+        result.push(dataMap[slotTime] !== undefined ? dataMap[slotTime] : 0);
+      }
+      return result;
+    }
+
+    function createServerCard(server) {
+      const card = document.createElement('div');
+      card.className = 'server-card';
+
+      let featuresHTML = '';
+      if (server.collisionsEnable === 1) featuresHTML += '<span class="feature">碰撞</span>';
+      if (server.afkEnable === 0) featuresHTML += '<span class="feature">禁用挂机</span>';
+      if (server.policeCarEnable === 1) featuresHTML += '<span class="feature">警车</span>';
+      if (server.speedLimiterEnable === 1) featuresHTML += '<span class="feature">限速</span>';
+      if (server.queueCount > 0) featuresHTML += `<span class="queue-badge">队列 ${server.queueCount}</span>`;
+
+      const normalized = normalizeHistory(server.playerHistory);
+      card.innerHTML = `
+        <div class="server-info">
+          <div class="server-row">
+            <div class="server-left">
+              <span class="status-indicator ${server.isOnline === 1 ? 'online' : 'offline'}"></span>
+              <span class="server-name">${server.serverName}</span>
+            </div>
+            <span class="player-count"><span class="num">${server.playerCount}</span> / ${server.maxPlayer}</span>
+          </div>
+          ${featuresHTML ? `<div class="features">${featuresHTML}</div>` : ''}
+        </div>
+        <div class="chart-area">
+          ${server.isOnline === 1 && normalized.length ? buildChartSVG(normalized, 600, 42, server.maxPlayer) : ''}
+        </div>`;
+
+      return card;
+    }
+
+    function setData(apiData) {
+      const servers = apiData && Array.isArray(apiData.data) ? apiData.data : [];
+      const listEl = document.getElementById('server-list');
+      listEl.innerHTML = '';
+      servers.forEach((server) => listEl.appendChild(createServerCard(server)));
+    }
+  </script>
+</body>
+</html>

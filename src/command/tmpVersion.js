@@ -1,16 +1,18 @@
-const truckersMpApi = require("../api/truckersMpApi");
+const evmOpenApi = require('../api/evmOpenApi')
 
 module.exports = async (ctx) => {
-  // 查询版本信息
-  let result = await truckersMpApi.version(ctx.http)
+  const result = await evmOpenApi.tmpVersion(ctx.http)
   if (result.error) {
-    return '查询失败，请稍后再试'
+    return '查询数据失败，请稍后再试'
   }
 
-  // 构建消息返回
-  let message = ''
-  message += `TMP版本：${result.data.name}\n`;
-  message += `欧卡支持版本: ${result.data.supported_game_version}\n`;
-  message += `美卡支持版本: ${result.data.supported_ats_game_version}`;
+  const data = result.data || {}
+  let message = 'TMP 版本信息\n'
+  message += `联机插件: ${data.tmpVersion || '-'}\n`
+  message += `兼容版本: ${data.supportGameVersion || '-'}\n`
+  message += `官方版本: ${data.officialGameVersion || '-'}\n`
+  message += data.supportGameVersion === data.officialGameVersion
+    ? '兼容游戏: 是'
+    : '兼容游戏: 否'
   return message
 }

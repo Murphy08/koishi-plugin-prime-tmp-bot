@@ -114,7 +114,7 @@ module.exports = async (ctx, cfg, session, tmpId) => {
   let page;
   try {
     page = await ctx.puppeteer.page();
-    await page.setViewport({ width: 419, height: 1078, deviceScaleFactor: 2 });
+    await page.setViewport({ width: 419, height: 1078, deviceScaleFactor: 1.5 });
     await page.goto(
       `file:///${resolve(__dirname, "../../resource/query.html")}`,
     );

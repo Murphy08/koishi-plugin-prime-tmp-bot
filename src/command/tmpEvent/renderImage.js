@@ -10,7 +10,7 @@ module.exports = async function renderImage (ctx, event) {
   let page
   try {
     page = await ctx.puppeteer.page()
-    await page.setViewport({ width: 1260, height: 1600 })
+    await page.setViewport({ width: 1260, height: 1600, deviceScaleFactor: 1.5 })
     await page.goto(`file:///${resolve(__dirname, '../../resource/event.html')}`)
     await page.evaluate(async (eventData) => {
       window.renderEvent(eventData)
@@ -32,7 +32,8 @@ module.exports = async function renderImage (ctx, event) {
 
     await page.setViewport({
       width: Math.max(1260, viewport.width),
-      height: Math.min(Math.max(1400, viewport.height), 16000)
+      height: Math.min(Math.max(1400, viewport.height), 16000),
+      deviceScaleFactor: 1.5
     })
     await common.sleep(120)
     await page.evaluate(async () => {

@@ -30,6 +30,11 @@ export interface Config {
   baiduTranslateCacheEnable: boolean
   queryShowAvatarEnable: boolean
   tmpTrafficType: 1 | 2
+  tmpServerType: 1 | 2
+  tmpPositionType: 1 | 2
+  tmpDlcMapType: 1 | 2
+  tmpMileageRankingType: 1 | 2
+  tmpFootprintType: 1 | 2
   tmpQueryType: 1 | 2
   tmpVtcQueryType: 1 | 2
   defaultVTCID: number
@@ -49,6 +54,26 @@ export const Config: Schema<Config> = Schema.intersect([
       Schema.const(1).description('文字'),
       Schema.const(2).description('热力图')
     ]).default(2).description('路况信息展示方式'),
+    tmpServerType: Schema.union([
+      Schema.const(1).description('文字'),
+      Schema.const(2).description('图片')
+    ]).default(1).description('服务器信息展示方式'),
+    tmpPositionType: Schema.union([
+      Schema.const(1).description('文字'),
+      Schema.const(2).description('图片')
+    ]).default(2).description('玩家位置展示方式'),
+    tmpDlcMapType: Schema.union([
+      Schema.const(1).description('文字'),
+      Schema.const(2).description('图片')
+    ]).default(2).description('DLC 地图展示方式'),
+    tmpMileageRankingType: Schema.union([
+      Schema.const(1).description('文字'),
+      Schema.const(2).description('图片')
+    ]).default(2).description('里程排行榜展示方式'),
+    tmpFootprintType: Schema.union([
+      Schema.const(1).description('文字'),
+      Schema.const(2).description('图片')
+    ]).default(2).description('足迹展示方式'),
     tmpQueryType: Schema.union([
       Schema.const(1).description('文字'),
       Schema.const(2).description('图片')
@@ -70,16 +95,16 @@ export function apply(ctx: Context, cfg: Config) {
 
   ctx.command('tmpquery [tmpId]').action(async ({ session }, tmpId) => await tmpQuery(ctx, cfg, session, tmpId))
   ctx.command('tmpvtc <vtcId>').action(async ({ session }, vtcId) => await tmpVtc(ctx, cfg, session, vtcId))
-  ctx.command('tmpserverets').action(async () => await tmpServer(ctx))
+  ctx.command('tmpserverets').action(async () => await tmpServer(ctx, cfg))
   ctx.command('tmpbind <tmpId>').action(async ({ session }, tmpId) => await tmpBind(ctx, cfg, session, tmpId))
   ctx.command('tmptraffic <serverName>').action(async ({ session }, serverName) => await tmpTraffic(ctx, cfg, serverName))
   ctx.command('tmpposition [tmpId]').action(async ({ session }, tmpId) => await tmpPosition(ctx, cfg, session, tmpId))
   ctx.command('tmpversion').action(async () => await tmpVersion(ctx))
-  ctx.command('tmpdlcmap').action(async ({ session }) => await tmpDlcMap(ctx, session))
-  ctx.command('tmpmileageranking').action(async ({ session }) => await tmpMileageRanking(ctx, session, MileageRankingType.total))
-  ctx.command('tmptodaymileageranking').action(async ({ session }) => await tmpMileageRanking(ctx, session, MileageRankingType.today))
-  ctx.command('tmpfootprints [tmpId]').action(async ({ session }, tmpId) => await tmpFootprint(ctx, session, ServerType.ets, tmpId))
-  ctx.command('tmpfootprintp [tmpId]').action(async ({ session }, tmpId) => await tmpFootprint(ctx, session, ServerType.promods, tmpId))
+  ctx.command('tmpdlcmap').action(async ({ session }) => await tmpDlcMap(ctx, cfg, session))
+  ctx.command('tmpmileageranking').action(async ({ session }) => await tmpMileageRanking(ctx, cfg, session, MileageRankingType.total))
+  ctx.command('tmptodaymileageranking').action(async ({ session }) => await tmpMileageRanking(ctx, cfg, session, MileageRankingType.today))
+  ctx.command('tmpfootprints [tmpId]').action(async ({ session }, tmpId) => await tmpFootprint(ctx, cfg, session, ServerType.ets, tmpId))
+  ctx.command('tmpfootprintp [tmpId]').action(async ({ session }, tmpId) => await tmpFootprint(ctx, cfg, session, ServerType.promods, tmpId))
   ctx.command('tmpevent <eventId>').action(async ({ session }, eventId) => await tmpEvent(ctx, cfg, session, 'eventById', eventId))
   ctx.command('tmpdefaultvtcrecent [count]').action(async ({ session }, count) => await tmpEvent(ctx, cfg, session, 'defaultVtcRecent', count))
   ctx.command('tmpvtcrecent [vtcId] [count]').action(async ({ session }, vtcId, count) => await tmpEvent(ctx, cfg, session, 'vtcRecent', vtcId, count))

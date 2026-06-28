@@ -72,5 +72,10 @@ module.exports = {
   async mapPlayerHistory (http, tmpId, serverId, startTime, endTime) {
     const url = `${BASE_API}/map/playerHistory?tmpId=${tmpId || ''}&serverId=${serverId || ''}&startTime=${startTime || ''}&endTime=${endTime || ''}`
     return await request(http, 'evmOpenApi.mapPlayerHistory', url, (result) => resolveCodeData(result))
+  },
+
+  async tmpVersion (http) {
+    const url = `${BASE_API}/other/tmpVersion`
+    return await request(http, 'evmOpenApi.tmpVersion', url, (result) => resolveCodeData(result))
   }
 }
