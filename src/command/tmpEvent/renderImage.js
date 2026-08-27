@@ -18,7 +18,7 @@ module.exports = async function renderImage (ctx, event) {
         await window.prepareEventRender()
       }
     }, event)
-    await page.waitForNetworkIdle({ idleTime: 250, timeout: 8000 }).catch(() => {})
+    await page.waitForNetworkIdle({ idleTime: 120, timeout: 4000 }).catch(() => {})
 
     // 根据最终内容高度调整视口，避免长文本活动被截图截断。
     const viewport = await page.evaluate(() => {
@@ -35,7 +35,7 @@ module.exports = async function renderImage (ctx, event) {
       height: Math.min(Math.max(1400, viewport.height), 16000),
       deviceScaleFactor: 1.5
     })
-    await common.sleep(120)
+    await common.sleep(40)
     await page.evaluate(async () => {
       if (typeof window.prepareEventRender === 'function') {
         await window.prepareEventRender()

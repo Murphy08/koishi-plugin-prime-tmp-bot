@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>Player Profile</title>
+    <title>玩家信息</title>
   <link href="./package/leaflet/leaflet.min.css" rel="stylesheet">
+  <link href="./package/prime-theme.css" rel="stylesheet">
   <script src="./package/leaflet/leaflet.min.js"></script>
   <style>
     @font-face {
@@ -288,6 +289,7 @@
     .leaflet-container {
       background: rgba(0, 0, 0, 0.3);
     }
+    .query-arrow{width:24px;height:24px;display:grid;place-items:center;filter:drop-shadow(0 2px 4px #000)}.query-arrow::before{content:'';border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:20px solid #b3a8ff}
   </style>
 </head>
 <body>
@@ -299,8 +301,8 @@
           <img src="./package/img/logo2.png" alt="Logo">
         </div>
       </div>
-      <div class="header-title">Player Profile</div>
-      <div class="header-subtitle">Prime Logistics TMP profile lookup</div>
+      <div class="header-title">玩家信息</div>
+      <div class="header-subtitle">TruckersMP 玩家档案</div>
       <div class="profile-card">
         <img class="avatar" id="tmp-avatar" src="" alt="avatar">
         <div class="info">
@@ -312,30 +314,30 @@
 
     <div class="content">
       <div class="section details-container">
-        <div class="section-title">Account Details</div>
+        <div class="section-title">账号信息</div>
         <div class="form-box">
           <div class="form-item full">
             <div class="label">Steam ID</div>
             <div class="value" id="tmp-steam-id"></div>
           </div>
           <div class="form-item full">
-            <div class="label">Register Date</div>
+            <div class="label">注册日期</div>
             <div class="value" id="tmp-register-date"></div>
           </div>
           <div class="form-item">
-            <div class="label">Mileage</div>
+            <div class="label">总里程</div>
             <div class="value" id="tmp-mileage"></div>
           </div>
           <div class="form-item">
-            <div class="label">Today Mileage</div>
+            <div class="label">今日里程</div>
             <div class="value" id="tmp-today-mileage"></div>
           </div>
           <div class="form-item full">
-            <div class="label">Last Online Time</div>
+            <div class="label">最后在线</div>
             <div class="value" id="tmp-last-online-time"></div>
           </div>
           <div class="form-item full" id="tmp-vtc-box">
-            <div class="label">VTC</div>
+            <div class="label">所属 VTC</div>
             <div class="value" id="tmp-vtc-name"></div>
           </div>
           <div class="form-item" id="tmp-vtc-id-box">
@@ -343,26 +345,26 @@
             <div class="value" id="tmp-vtc-id"></div>
           </div>
           <div class="form-item" id="tmp-vtc-join-time-box">
-            <div class="label">VTC Join Time</div>
+            <div class="label">加入时间</div>
             <div class="value" id="tmp-vtc-join-time"></div>
           </div>
           <div class="form-item full" id="tmp-vtc-role-box">
-            <div class="label">VTC Role</div>
+            <div class="label">VTC 角色</div>
             <div class="value" id="tmp-vtc-role"></div>
           </div>
           <div class="form-item" id="tmp-sponsor-box">
-            <div class="label">Sponsor</div>
+            <div class="label">赞助金额</div>
             <div class="value" id="tmp-sponsor-amount"></div>
           </div>
           <div class="form-item" id="tmp-sponsor-cumulative-box">
-            <div class="label">Sponsor Total</div>
+            <div class="label">累计赞助</div>
             <div class="value" id="tmp-sponsor-cumulative"></div>
           </div>
         </div>
       </div>
 
       <div class="section" id="tmp-vtc-history-section">
-        <div class="section-title">VTC History</div>
+        <div class="section-title">VTC 历史</div>
         <div class="form-box" id="tmp-vtc-history-list"></div>
       </div>
 
@@ -372,19 +374,19 @@
       </div>
 
       <div class="section ban-container" id="ban-box">
-        <div class="ban-header">Ban Record</div>
-        <div class="ban-hidden" id="ban-hidden-box">This player has hidden ban details.</div>
+        <div class="ban-header">封禁记录</div>
+        <div class="ban-hidden" id="ban-hidden-box">该玩家隐藏了封禁详情</div>
         <div class="form-box" id="ban-info-box">
           <div class="form-item">
-            <div class="label">Until</div>
+            <div class="label">截止时间</div>
             <div class="value" id="ban-until"></div>
           </div>
           <div class="form-item">
-            <div class="label">Count</div>
+            <div class="label">封禁次数</div>
             <div class="value" id="ban-count"></div>
           </div>
           <div class="form-item full">
-            <div class="label">Reason</div>
+            <div class="label">封禁原因</div>
             <div class="value" id="ban-reason"></div>
           </div>
         </div>
@@ -458,10 +460,10 @@
     function createHistoryItem(history) {
       return `
         <div class="form-item full">
-          <div class="label">${history.vtcName || 'Unknown VTC'}</div>
+          <div class="label">${history.vtcName || '未知 VTC'}</div>
           <div class="value">VTC ID: ${history.vtcId ?? '-'}</div>
-          <div class="value">Join Date: ${formatDateText(history.joinDate)}</div>
-          <div class="value">Quit Date: ${formatDateText(history.quitDate)}</div>
+          <div class="value">加入日期：${formatDateText(history.joinDate)}</div>
+          <div class="value">退出日期：${formatDateText(history.quitDate)}</div>
         </div>
       `;
     }
@@ -504,6 +506,7 @@
 
       if (data.isOnline) {
         document.getElementById('position-title').innerText = `${data.onlineServerName} | ${data.onlineCountry} - ${data.onlineCity}`;
+        window.__playerHeading = data.heading || 0;
         map(data.onlineMapType, data.onlineX, data.onlineY);
       } else {
         document.getElementById('position-box').remove();
@@ -514,8 +517,8 @@
           document.getElementById('ban-info-box').remove();
         } else {
           document.getElementById('ban-hidden-box').remove();
-          document.getElementById('ban-until').innerText = data.banUntil || 'Permanent';
-          document.getElementById('ban-count').innerText = (data.banCount || 0) + ' bans';
+          document.getElementById('ban-until').innerText = data.banUntil || '永久';
+          document.getElementById('ban-count').innerText = (data.banCount || 0) + ' 次';
           document.getElementById('ban-reason').innerText = data.banReasonZh || data.banReason;
         }
       } else {
@@ -551,12 +554,8 @@
         )
       );
 
-      L.circleMarker(map.unproject(mapConfig[mapType].calculateMapCoordinate(x, y), 8), {
-        color: '#ffffff',
-        weight: 2,
-        fillColor: '#7A65DB',
-        fillOpacity: 1,
-        radius: 6
+      L.marker(map.unproject(mapConfig[mapType].calculateMapCoordinate(x, y), 8), {
+        icon: L.divIcon({ className: '', iconSize: [24,24], iconAnchor: [12,12], html: `<div class="query-arrow" style="transform:rotate(${Number(window.__playerHeading || 0) * 180 / Math.PI}deg)"></div>` })
       }).addTo(map);
 
       map.setView(map.unproject(mapConfig[mapType].calculateMapCoordinate(x, y), 8), 5);

@@ -1,9 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <title>玩家足迹展示</title>
   <link href="./package/leaflet/leaflet.min.css" rel="stylesheet">
+  <link href="./package/prime-theme.css" rel="stylesheet">
   <script src="./package/leaflet/leaflet.min.js"></script>
   <style>
     @font-face {
@@ -106,7 +107,7 @@
       </div>
       <div class="stats" id="stats-box">
         <span class="label">今日里程</span>
-        <span class="value" id="distance">0.0 km</span>
+        <span class="value" id="distance">0.0 公里</span>
       </div>
     </div>
   </div>
@@ -134,7 +135,7 @@
             return;
           }
 
-          document.getElementById('username').innerText = (data.name || 'Unknown') + ' 的今日行驶足迹';
+          document.getElementById('username').innerText = (data.name || '未知玩家') + ' 的今日行驶足迹';
           if (data.smallAvatarUrl) {
               document.getElementById('avatar').src = data.smallAvatarUrl;
           }
@@ -143,7 +144,7 @@
           // 使用传入的今日里程数据（米转千米）
           const mileage = data.todayMileage || 0;
           const km = (mileage / 1000).toFixed(1);
-          document.getElementById('distance').innerText = `${km} km`;
+          document.getElementById('distance').innerText = `${km} 公里`;
 
           if (points.length === 0) {
             markReady();

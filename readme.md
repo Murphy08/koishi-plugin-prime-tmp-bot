@@ -87,6 +87,8 @@ Prime Logistics 中国社区定制版 TruckersMP 查询插件。
 | --- | --- | --- |
 | `tmpmileageranking` | 总里程排行榜 | `tmpmileageranking` |
 | `tmptodaymileageranking` | 今日里程排行榜 | `tmptodaymileageranking` |
+| `tmpvtcmileageranking [vtcId]` | VTC 总里程排行榜 | `tmpvtcmileageranking 7` |
+| `tmpvtctodaymileageranking [vtcId]` | VTC 今日里程排行榜 | `tmpvtctodaymileageranking 7` |
 | `tmpfootprints [tmpId]` | 今日 ETS2 足迹 | `tmpfootprints 123456` |
 | `tmpfootprintp [tmpId]` | 今日 ProMods 足迹 | `tmpfootprintp 123456` |
 
@@ -98,6 +100,7 @@ Prime Logistics 中国社区定制版 TruckersMP 查询插件。
 | `tmpevent <eventId>` | 查询 TruckersMP 活动详情 | `tmpevent 12345` |
 | `tmpdefaultvtcrecent [count]` | 查询默认 VTC 近期活动 | `tmpdefaultvtcrecent 3` |
 | `tmpvtcrecent [vtcId] [count]` | 查询指定 VTC 近期活动 | `tmpvtcrecent 7 3` |
+| `tmpvtcmemberonline [vtcId]` | 查询 VTC 成员在线状态 | `tmpvtcmemberonline 7` |
 
 ### 其他
 

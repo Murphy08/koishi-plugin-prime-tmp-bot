@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Traffic Heatmap</title>
+  <title>路况热力图</title>
   <link href="./package/leaflet/leaflet.min.css" rel="stylesheet">
+  <link href="./package/prime-theme.css" rel="stylesheet">
   <script src="./package/leaflet/leaflet.min.js"></script>
   <script src="./package/leaflet/heatmap.min.js"></script>
   <script src="./package/leaflet/leaflet-heatmap.js"></script>
@@ -235,8 +236,8 @@
     <div class="page-header">
       <div>
         <div class="header-kicker">Prime Logistics</div>
-        <div class="header-title">Traffic Heatmap</div>
-        <div class="header-subtitle">Prime Logistics road activity overview</div>
+        <div class="header-title">路况热力图</div>
+        <div class="header-subtitle">道路活动总览</div>
       </div>
       <div class="header-logo">
         <img src="./package/img/logo2.png" alt="Logo">
@@ -249,8 +250,8 @@
 
     <div class="traffic-section">
       <div class="section-head">
-        <div class="section-title">Hot Regions</div>
-        <div class="section-note">Live congestion overview</div>
+        <div class="section-title">热门区域</div>
+        <div class="section-note">实时拥堵概览</div>
       </div>
       <div class="traffic-box"></div>
     </div>
@@ -378,7 +379,7 @@
         trafficBox.insertAdjacentHTML('beforeend', `
           <div class="traffic-item">
             <span class="region-info"><strong>${traffic.country}</strong>${traffic.province}</span>
-            <span class="player-count">${traffic.playerCount} players</span>
+            <span class="player-count">${traffic.playerCount} 人</span>
             <span class="traffic-status" style="color: ${traffic.severity.color}">${traffic.severity.text}</span>
           </div>
         `);

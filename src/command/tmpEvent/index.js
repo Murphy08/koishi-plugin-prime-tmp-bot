@@ -22,8 +22,8 @@ async function sendEventMessages (ctx, cfg, session, events) {
       return
     }
     case 2: {
-      for (const event of events) {
-        const image = await renderImage(ctx, event)
+      const images = await Promise.all(events.map((event) => renderImage(ctx, event)))
+      for (const image of images) {
         if (typeof image === 'string') {
           return image
         }

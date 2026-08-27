@@ -13,6 +13,8 @@ const tmpPosition = require('./command/tmpPosition')
 const tmpVersion = require('./command/tmpVersion')
 const tmpDlcMap = require('./command/tmpDlcMap')
 const tmpMileageRanking = require('./command/tmpMileageRanking')
+const tmpVtcMemberOnline = require('./command/tmpVtcMemberOnline')
+const tmpVtcMileageRanking = require('./command/tmpVtcMileageRanking')
 const tmpFootprint = require('./command/tmpFootprint')
 const tmpEvent = require('./command/tmpEvent')
 
@@ -34,6 +36,8 @@ export interface Config {
   tmpPositionType: 1 | 2
   tmpDlcMapType: 1 | 2
   tmpMileageRankingType: 1 | 2
+  tmpVtcMemberOnlineType: 1 | 2
+  tmpVtcMileageRankingType: 1 | 2
   tmpFootprintType: 1 | 2
   tmpQueryType: 1 | 2
   tmpVtcQueryType: 1 | 2
@@ -70,6 +74,14 @@ export const Config: Schema<Config> = Schema.intersect([
       Schema.const(1).description('文字'),
       Schema.const(2).description('图片')
     ]).default(2).description('里程排行榜展示方式'),
+    tmpVtcMemberOnlineType: Schema.union([
+      Schema.const(1).description('文字'),
+      Schema.const(2).description('图片')
+    ]).default(2).description('VTC 在线成员展示方式'),
+    tmpVtcMileageRankingType: Schema.union([
+      Schema.const(1).description('文字'),
+      Schema.const(2).description('图片')
+    ]).default(2).description('VTC 里程排行榜展示方式'),
     tmpFootprintType: Schema.union([
       Schema.const(1).description('文字'),
       Schema.const(2).description('图片')
@@ -103,6 +115,9 @@ export function apply(ctx: Context, cfg: Config) {
   ctx.command('tmpdlcmap').action(async ({ session }) => await tmpDlcMap(ctx, cfg, session))
   ctx.command('tmpmileageranking').action(async ({ session }) => await tmpMileageRanking(ctx, cfg, session, MileageRankingType.total))
   ctx.command('tmptodaymileageranking').action(async ({ session }) => await tmpMileageRanking(ctx, cfg, session, MileageRankingType.today))
+  ctx.command('tmpvtcmemberonline [vtcId]').action(async ({ session }, vtcId) => await tmpVtcMemberOnline(ctx, cfg, session, vtcId))
+  ctx.command('tmpvtcmileageranking [vtcId]').action(async ({ session }, vtcId) => await tmpVtcMileageRanking(ctx, cfg, session, vtcId, MileageRankingType.total))
+  ctx.command('tmpvtctodaymileageranking [vtcId]').action(async ({ session }, vtcId) => await tmpVtcMileageRanking(ctx, cfg, session, vtcId, MileageRankingType.today))
   ctx.command('tmpfootprints [tmpId]').action(async ({ session }, tmpId) => await tmpFootprint(ctx, cfg, session, ServerType.ets, tmpId))
   ctx.command('tmpfootprintp [tmpId]').action(async ({ session }, tmpId) => await tmpFootprint(ctx, cfg, session, ServerType.promods, tmpId))
   ctx.command('tmpevent <eventId>').action(async ({ session }, eventId) => await tmpEvent(ctx, cfg, session, 'eventById', eventId))

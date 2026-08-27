@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>Mileage Leaderboard</title>
+  <link href="./package/prime-theme.css" rel="stylesheet">
+  <title>里程排行榜</title>
   <style>
     @font-face {
       font-family: 'segui-emj';
@@ -281,7 +282,7 @@
     <div class="header">
       <div><div class="header-kicker">Prime Logistics</div>
       <div class="title">里程排行榜</div>
-      <div class="header-subtitle">Mileage Leaderboard</div></div>
+      <div class="header-subtitle">里程数据排行</div></div>
       
       <div>
         <div class="header-logo">
@@ -290,7 +291,7 @@
     </div>
 
     <div class="leaderboard-container">
-      <div class="section-label">Top 10 Drivers</div>
+      <div class="section-label">前十名玩家</div>
       <div id="top-rankings"></div>
     </div>
 
@@ -299,7 +300,7 @@
     <div class="current-player-container">
       <div class="current-player-title">
         <span>我的排名</span>
-        <span>Your Position</span>
+        <span>当前玩家</span>
       </div>
       <div id="current-player"></div>
     </div>
@@ -325,11 +326,11 @@
           <div class="rank ${rankClass}">#${rank}</div>
           <div class="player-info">
             <div class="player-name">${playerName}</div>
-            <div class="player-meta">${isCurrentPlayer ? 'Current Driver' : isTop3 ? 'Top Performer' : 'Distance Ranking'}</div>
+            <div class="player-meta">${isCurrentPlayer ? '我的排名' : isTop3 ? '前三名' : '里程排名'}</div>
           </div>
           <div class="mileage-block">
             <div class="mileage-value">${formatMileage(mileage)}</div>
-            <div class="mileage-label">Mileage</div>
+            <div class="mileage-label">里程</div>
           </div>
         </div>
       `;
@@ -379,8 +380,8 @@
           2: '今日里程排行榜'
         };
         const subtitles = {
-          1: 'Total Mileage Leaderboard',
-          2: 'Today Mileage Leaderboard'
+          1: '总里程排行榜',
+          2: '今日里程排行榜'
         };
         const footerNotes = {
           1: '* 数据自 2025-01-03 20:00 起开始统计',
@@ -388,7 +389,7 @@
         };
 
         titleElement.textContent = titles[apiData.rankingType] || '里程排行榜';
-        if (subtitleElement) subtitleElement.textContent = subtitles[apiData.rankingType] || 'Mileage Leaderboard';
+        if (subtitleElement) subtitleElement.textContent = subtitles[apiData.rankingType] || '里程排行榜';
         if (footerElement) footerElement.textContent = footerNotes[apiData.rankingType] || '* 数据统计说明';
       }
 

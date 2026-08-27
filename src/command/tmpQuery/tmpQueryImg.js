@@ -54,6 +54,7 @@ module.exports = async (ctx, cfg, session, tmpId) => {
 
   // 查询线上信息
   let playerMapInfo = await truckyAppApi.online(ctx.http, tmpId);
+  let directionInfo = await evmOpenApi.mapPlayerList(ctx.http, null, null, null, null, null, { tmpId });
 
   // 拼接数据
   let data = {};
@@ -81,6 +82,7 @@ module.exports = async (ctx, cfg, session, tmpId) => {
   data.todayMileage = playerInfo.data.todayMileage;
   data.lastOnlineTime = playerInfo.data.lastOnlineTime;
   data.isOnline = false;
+  data.heading = 0;
   if (playerMapInfo && !playerMapInfo.error) {
     data.isOnline = playerMapInfo.data.online;
     if (data.isOnline) {
@@ -102,6 +104,10 @@ module.exports = async (ctx, cfg, session, tmpId) => {
       )
         ? "promods"
         : "ets";
+      const directionPlayer = !directionInfo.error && Array.isArray(directionInfo.data)
+        ? directionInfo.data.find((item) => String(item.tmpId) === String(tmpId))
+        : null;
+      data.heading = directionPlayer?.heading ?? playerMapInfo.data.heading ?? 0;
     }
   }
   data.isBan = playerInfo.data.isBan;

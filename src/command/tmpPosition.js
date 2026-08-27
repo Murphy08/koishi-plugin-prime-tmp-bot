@@ -51,19 +51,22 @@ async function loadPositionData (ctx, cfg, session, inputTmpId) {
   )
 
   let areaPlayerList = []
+  let currentPlayerHeading = playerMapInfo.data.heading ?? playerMapInfo.data.rotation ?? 0
   if (!areaPlayersData.error && Array.isArray(areaPlayersData.data)) {
     areaPlayerList = areaPlayersData.data
     const index = areaPlayerList.findIndex((player) => {
       return player.tmpId.toString() === tmpId.toString()
     })
     if (index !== -1) {
+      currentPlayerHeading = areaPlayerList[index].heading ?? currentPlayerHeading
       areaPlayerList.splice(index, 1)
     }
   }
   areaPlayerList.push({
     axisX: playerMapInfo.data.x,
     axisY: playerMapInfo.data.y,
-    tmpId
+    tmpId,
+    heading: currentPlayerHeading
   })
 
   const promodsServerIdList = [50, 51]
@@ -81,6 +84,7 @@ async function loadPositionData (ctx, cfg, session, inputTmpId) {
       currentPlayerId: tmpId,
       centerX: playerMapInfo.data.x,
       centerY: playerMapInfo.data.y,
+      heading: currentPlayerHeading,
       playerList: areaPlayerList
     }
   }

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>Live Position</title>
+  <title>实时位置</title>
   <link href="./package/leaflet/leaflet.min.css" rel="stylesheet">
+  <link href="./package/prime-theme.css" rel="stylesheet">
   <script src="./package/leaflet/leaflet.min.js"></script>
   <style>
     @font-face {
@@ -228,6 +229,9 @@
     .leaflet-container {
       background: rgba(0, 0, 0, 0.3);
     }
+    .player-arrow { width: 24px; height: 24px; display:flex; align-items:center; justify-content:center; filter: drop-shadow(0 2px 4px rgba(0,0,0,.7)); }
+    .player-arrow::before { content:''; display:block; width:0; height:0; border-left:8px solid transparent; border-right:8px solid transparent; border-bottom:20px solid #fff; }
+    .player-arrow.current::before { border-left-width:11px; border-right-width:11px; border-bottom-width:28px; border-bottom-color:#b3a8ff; }
   </style>
 </head>
 <body>
@@ -237,8 +241,8 @@
     <div class="page-header">
       <div>
         <div class="header-kicker">Prime Logistics</div>
-        <div class="header-title">Live Position</div>
-        <div class="header-subtitle">Convoy map snapshot</div>
+        <div class="header-title">实时位置</div>
+        <div class="header-subtitle">车队地图快照</div>
       </div>
       <div class="header-logo">
         <img src="./package/img/logo2.png" alt="Logo">
@@ -251,7 +255,7 @@
         <div class="username">...</div>
         <div class="server-name-box">
           <span class="server-name">...</span>
-          <span>online</span>
+          <span>在线</span>
         </div>
       </div>
       <div class="location-box">
@@ -350,13 +354,12 @@
       document.getElementsByClassName('real-name')[0].innerText = data.realName;
 
       for (let player of data.playerList) {
-        L.circleMarker(map.unproject(mapConfig[data.mapType].calculateMapCoordinate(player.axisX, player.axisY), 8), {
-          color: '#000000',
-          weight: 2,
-          fillColor: data.currentPlayerId.toString() === player.tmpId.toString() ? '#7A65DB' : '#ffffff',
-          fillOpacity: 1,
-          radius: 5,
-          zIndex: data.currentPlayerId.toString() === player.tmpId.toString() ? 1000 : undefined
+        const current = data.currentPlayerId.toString() === player.tmpId.toString();
+        const heading = Number(player.heading);
+        const rotation = Number.isFinite(heading) ? heading * 180 / Math.PI : 0;
+        L.marker(map.unproject(mapConfig[data.mapType].calculateMapCoordinate(player.axisX, player.axisY), 8), {
+          zIndexOffset: current ? 1000 : 0,
+          icon: L.divIcon({ className: '', iconSize: [current ? 30 : 24, current ? 30 : 24], iconAnchor: [current ? 15 : 12, current ? 15 : 12], html: `<div class="player-arrow${current ? ' current' : ''}" style="transform:rotate(${rotation}deg)"></div>` })
         }).addTo(map);
       }
 

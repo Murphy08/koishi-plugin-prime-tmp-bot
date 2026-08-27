@@ -1,4 +1,4 @@
-const BASE_API = 'https://da.vtcm.link'
+const BASE_API = 'https://evmapi.cxnnn.cn'
 const { logRequestSuccess, logRequestError } = require('../util/requestLog')
 
 async function request (http, name, url, resolveData) {
@@ -44,8 +44,17 @@ module.exports = {
     return await request(http, 'evmOpenApi.serverList', url, (result) => resolveCodeData(result))
   },
 
-  async mapPlayerList (http, serverId, ax, ay, bx, by) {
-    const url = `${BASE_API}/map/playerList?aAxisX=${ax}&aAxisY=${ay}&bAxisX=${bx}&bAxisY=${by}&serverId=${serverId}`
+  async mapPlayerList (http, serverId, ax, ay, bx, by, options = {}) {
+    const params = new URLSearchParams()
+    if (serverId !== undefined && serverId !== null && serverId !== '') params.set('serverId', serverId)
+    if (ax !== undefined && ax !== null && ax !== '') params.set('aAxisX', ax)
+    if (ay !== undefined && ay !== null && ay !== '') params.set('aAxisY', ay)
+    if (bx !== undefined && bx !== null && bx !== '') params.set('bAxisX', bx)
+    if (by !== undefined && by !== null && by !== '') params.set('bAxisY', by)
+    if (options.tmpId) params.set('tmpId', options.tmpId)
+    if (options.tmpIdList) params.set('tmpIdList', options.tmpIdList)
+    if (options.tmpName) params.set('tmpName', options.tmpName)
+    const url = `${BASE_API}/map/playerList?${params.toString()}`
     return await request(http, 'evmOpenApi.mapPlayerList', url, (result) => resolveCodeData(result))
   },
 
@@ -57,6 +66,16 @@ module.exports = {
   async vtcInfo (http, vtcId) {
     const url = `${BASE_API}/vtc/info?vtcId=${vtcId}`
     return await request(http, 'evmOpenApi.vtcInfo', url, (result) => resolveCodeData(result, true))
+  },
+
+  async vtcMemberOnline (http, vtcId) {
+    const url = `${BASE_API}/vtc/memberOnline?vtcId=${vtcId}`
+    return await request(http, 'evmOpenApi.vtcMemberOnline', url, (result) => resolveCodeData(result))
+  },
+
+  async vtcMileageRankingList (http, rankingType, vtcId) {
+    const url = `${BASE_API}/statistics/VTCmileageRankingList?rankingType=${rankingType}&vtcId=${vtcId}`
+    return await request(http, 'evmOpenApi.vtcMileageRankingList', url, (result) => resolveCodeData(result))
   },
 
   async dlcList (http, type) {
