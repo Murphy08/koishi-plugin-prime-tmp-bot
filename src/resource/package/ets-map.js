@@ -78,10 +78,12 @@ function createTmpTileLayer(mapType, map, options = {}) {
   });
 
   layer.getTileSize = () => {
-    const viewZoom = map.getZoom();
-    const sourceZoom = Math.max(0, Math.min(TMP_MAP_ZOOM_LEVELS, Math.round(viewZoom)));
+    // Leaflet indexes tiles at an integer zoom and scales that grid for fractional views.
+    // Keep the tile grid and its CRS scale on the same zoom to align tiles with overlays.
+    const tileZoom = Math.round(map.getZoom());
+    const sourceZoom = Math.max(0, Math.min(TMP_MAP_ZOOM_LEVELS, tileZoom));
     const levelStep = Math.pow(3, TMP_MAP_ZOOM_LEVELS - sourceZoom);
-    const pixelSize = levelStep * TMP_MAP_TILE_SIZE * map.options.crs.scale(viewZoom);
+    const pixelSize = levelStep * TMP_MAP_TILE_SIZE * map.options.crs.scale(tileZoom);
     return L.point(pixelSize, pixelSize);
   };
   layer.getTileUrl = (coords) => {
