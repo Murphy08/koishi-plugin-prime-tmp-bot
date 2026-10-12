@@ -6,6 +6,7 @@
   <link href="./package/leaflet/leaflet.min.css" rel="stylesheet">
   <link href="./package/prime-theme.css" rel="stylesheet">
   <script src="./package/leaflet/leaflet.min.js"></script>
+  <script src="./package/ets-map.js"></script>
   <script src="./package/leaflet/heatmap.min.js"></script>
   <script src="./package/leaflet/leaflet-heatmap.js"></script>
   <style>
@@ -258,95 +259,30 @@
   </div>
 
   <script>
-    let mapConfig = {
-      ets: {
-        tileUrl: 'https://ets-map.oss-cn-beijing.aliyuncs.com/ets2/05102019/{z}/{x}/{y}.png',
-        multipliers: {
-          x: 70272,
-          y: 76157
-        },
-        breakpoints: {
-          uk: {
-            x: -31056.8,
-            y: -5832.867
-          }
-        },
-        bounds: {
-          y: 131072,
-          x: 131072
-        },
-        maxZoom: 8,
-        minZoom: 2,
-        calculateMapCoordinate(x, y) {
-          return [
-            x / 1.609055 + mapConfig.ets.multipliers.x,
-            y / 1.609055 + mapConfig.ets.multipliers.y
-          ];
-        }
-      },
-      promods: {
-        tileUrl: 'https://ets-map.oss-cn-beijing.aliyuncs.com/promods/05102019/{z}/{x}/{y}.png',
-        multipliers: {
-          x: 51953,
-          y: 76024
-        },
-        breakpoints: {
-          uk: {
-            x: -31056.8,
-            y: -5832.867
-          }
-        },
-        bounds: {
-          y: 131072,
-          x: 131072
-        },
-        maxZoom: 8,
-        minZoom: 2,
-        calculateMapCoordinate(x, y) {
-          return [
-            x / 2.598541 + mapConfig.promods.multipliers.x,
-            y / 2.598541 + mapConfig.promods.multipliers.y
-          ];
-        }
-      }
-    };
-
-    let map = L.map('map', {
-      attributionControl: false,
-      crs: L.CRS.Simple,
-      zoomControl: false,
-      zoomSnap: 0.1
-    });
+    let map;
 
     function setData(data) {
-      let bounds = L.latLngBounds(
-        map.unproject([0, mapConfig[data.mapType].bounds.y], mapConfig[data.mapType].maxZoom),
-        map.unproject([mapConfig[data.mapType].bounds.x, 0], mapConfig[data.mapType].maxZoom)
-      );
+      map = L.map('map', {
+        attributionControl: false,
+        crs: createTmpMapCrs(data.mapType),
+        zoomControl: false,
+        zoomSnap: 0.25,
+        minZoom: -3,
+        maxZoom: 3
+      });
+      const bounds = getTmpMapBounds(data.mapType);
+      map.setMaxBounds(bounds);
 
-      L.tileLayer(mapConfig[data.mapType].tileUrl, {
-        minZoom: 0,
-        maxZoom: 8,
-        minNativeZoom: 1,
-        maxNativeZoom: 8,
-        tileSize: 512,
-        bounds: bounds,
-        reuseTiles: true
-      }).addTo(map);
+      const tileLayer = createTmpTileLayer(data.mapType, map);
+      markTmpMapReadyWhenTilesLoad(tileLayer);
+      tileLayer.addTo(map);
 
-      map.setMaxBounds(
-        new L.LatLngBounds(
-          map.unproject([0, mapConfig[data.mapType].bounds.y], mapConfig[data.mapType].maxZoom),
-          map.unproject([mapConfig[data.mapType].bounds.x, 0], mapConfig[data.mapType].maxZoom)
-        )
-      );
-
-      map.fitBounds(bounds);
+      map.setView(bounds.getCenter(), -1.75);
 
       let heatmapLayer = new HeatmapOverlay({
-        radius: 5,
+        radius: 16,
         maxOpacity: 0.85,
-        scaleRadius: true,
+        scaleRadius: false,
         useLocalExtrema: true,
         latField: 'lat',
         lngField: 'lng',
@@ -362,7 +298,7 @@
 
       let heatmapData = [];
       for (const coordinate of (data.playerCoordinateList || [])) {
-        let unprojected = map.unproject(mapConfig[data.mapType].calculateMapCoordinate(coordinate[0], coordinate[1]), 8);
+        let unprojected = getTmpMapLatLng(data.mapType, coordinate[0], coordinate[1]);
         heatmapData.push({ lat: unprojected.lat, lng: unprojected.lng, count: 1 });
       }
 

@@ -142,7 +142,7 @@ module.exports = async (ctx, cfg, serverName) => {
       `file:///${resolve(__dirname, "../../resource/traffic.html")}`,
     );
     await page.evaluate(`setData(${JSON.stringify(data)})`);
-    await common.waitForPageRender(page);
+    await common.waitForPageRender(page, { readyFlag: '__tmpMapTilesReady', timeoutMs: 20000 });
     const element = await page.$("#container");
     return segment.image(
       await element.screenshot({

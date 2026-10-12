@@ -6,6 +6,7 @@
   <link href="./package/leaflet/leaflet.min.css" rel="stylesheet">
   <link href="./package/prime-theme.css" rel="stylesheet">
   <script src="./package/leaflet/leaflet.min.js"></script>
+  <script src="./package/ets-map.js"></script>
   <style>
     @font-face {
       font-family: 'segui-emj';
@@ -266,86 +267,22 @@
   </div>
 
   <script>
-    let mapConfig = {
-      ets: {
-        tileUrl: 'https://ets-map.oss-cn-beijing.aliyuncs.com/ets2/05102019/{z}/{x}/{y}.png',
-        multipliers: {
-          x: 70272,
-          y: 76157
-        },
-        breakpoints: {
-          uk: {
-            x: -31056.8,
-            y: -5832.867
-          }
-        },
-        bounds: {
-          y: 131072,
-          x: 131072
-        },
-        maxZoom: 8,
-        minZoom: 2,
-        calculateMapCoordinate(x, y) {
-          return [
-            x / 1.609055 + mapConfig.ets.multipliers.x,
-            y / 1.609055 + mapConfig.ets.multipliers.y
-          ];
-        }
-      },
-      promods: {
-        tileUrl: 'https://ets-map.oss-cn-beijing.aliyuncs.com/promods/05102019/{z}/{x}/{y}.png',
-        multipliers: {
-          x: 51953,
-          y: 76024
-        },
-        breakpoints: {
-          uk: {
-            x: -31056.8,
-            y: -5832.867
-          }
-        },
-        bounds: {
-          y: 131072,
-          x: 131072
-        },
-        maxZoom: 8,
-        minZoom: 2,
-        calculateMapCoordinate(x, y) {
-          return [
-            x / 2.598541 + mapConfig.promods.multipliers.x,
-            y / 2.598541 + mapConfig.promods.multipliers.y
-          ];
-        }
-      }
-    };
-
-    let map = L.map('map', {
-      attributionControl: false,
-      crs: L.CRS.Simple,
-      zoomControl: false
-    });
+    let map;
 
     function setData(data) {
-      let bounds = L.latLngBounds(
-        map.unproject([0, mapConfig[data.mapType].bounds.y], mapConfig[data.mapType].maxZoom),
-        map.unproject([mapConfig[data.mapType].bounds.x, 0], mapConfig[data.mapType].maxZoom)
-      );
+      map = L.map('map', {
+        attributionControl: false,
+        crs: createTmpMapCrs(data.mapType),
+        zoomControl: false,
+        minZoom: -3,
+        maxZoom: 3
+      });
+      const bounds = getTmpMapBounds(data.mapType);
+      map.setMaxBounds(bounds);
 
-      L.tileLayer(mapConfig[data.mapType].tileUrl, {
-        minZoom: 2,
-        maxZoom: 10,
-        maxNativeZoom: 8,
-        tileSize: 512,
-        bounds: bounds,
-        reuseTiles: true
-      }).addTo(map);
-
-      map.setMaxBounds(
-        new L.LatLngBounds(
-          map.unproject([0, mapConfig[data.mapType].bounds.y], mapConfig[data.mapType].maxZoom),
-          map.unproject([mapConfig[data.mapType].bounds.x, 0], mapConfig[data.mapType].maxZoom)
-        )
-      );
+      const tileLayer = createTmpTileLayer(data.mapType, map);
+      markTmpMapReadyWhenTilesLoad(tileLayer);
+      tileLayer.addTo(map);
 
       document.getElementsByClassName('avatar')[0].src = data.avatar;
       document.getElementsByClassName('username')[0].innerText = data.username;
@@ -357,13 +294,13 @@
         const current = data.currentPlayerId.toString() === player.tmpId.toString();
         const heading = Number(player.heading);
         const rotation = Number.isFinite(heading) ? heading * 180 / Math.PI : 0;
-        L.marker(map.unproject(mapConfig[data.mapType].calculateMapCoordinate(player.axisX, player.axisY), 8), {
+        L.marker(getTmpMapLatLng(data.mapType, player.axisX, player.axisY), {
           zIndexOffset: current ? 1000 : 0,
           icon: L.divIcon({ className: '', iconSize: [current ? 30 : 24, current ? 30 : 24], iconAnchor: [current ? 15 : 12, current ? 15 : 12], html: `<div class="player-arrow${current ? ' current' : ''}" style="transform:rotate(${rotation}deg)"></div>` })
         }).addTo(map);
       }
 
-      map.setView(map.unproject(mapConfig[data.mapType].calculateMapCoordinate(data.centerX, data.centerY + 80), 8), 7);
+      map.setView(getTmpMapLatLng(data.mapType, data.centerX, data.centerY + 80), 2);
 
     }
   </script>

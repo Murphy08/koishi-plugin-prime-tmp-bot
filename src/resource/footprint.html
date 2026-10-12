@@ -114,6 +114,7 @@
 
   <script src="./package/ets-map.js"></script>
   <script>
+    let map;
     window.__footprintReady = false;
 
     function markReady() {
@@ -147,6 +148,7 @@
           document.getElementById('distance').innerText = `${km} 公里`;
 
           if (points.length === 0) {
+            window.__tmpMapTilesReady = true;
             markReady();
             return;
           }
@@ -186,25 +188,19 @@
           render(lines, data.mapType);
         }
     function render(lines, mapType) {
-      const config = mapConfig[mapType];
-
-      // 边界
-      let bounds = L.latLngBounds(
-        map.unproject([0, config.bounds.y], config.maxZoom),
-        map.unproject([config.bounds.x, 0], config.maxZoom)
-      );
+      map = L.map('map', {
+        attributionControl: false,
+        crs: createTmpMapCrs(mapType),
+        zoomControl: false,
+        minZoom: -3,
+        maxZoom: 3
+      });
+      const bounds = getTmpMapBounds(mapType);
       map.setMaxBounds(bounds);
 
-      // 瓦片
-      const tileLayer = L.tileLayer(config.tileUrl, {
-        minZoom: 0,
-        maxZoom: 8,
-        minNativeZoom: 2,
-        maxNativeZoom: 8,
-        tileSize: 512,
-        bounds: bounds,
-        reuseTiles: true
-      }).addTo(map);
+      const tileLayer = createTmpTileLayer(mapType, map);
+      markTmpMapReadyWhenTilesLoad(tileLayer);
+      tileLayer.addTo(map);
 
       let readyMarked = false;
       const finishRender = () => {
@@ -214,7 +210,6 @@
       };
 
       tileLayer.once('load', finishRender);
-      setTimeout(finishRender, 3000);
 
       let allLatlngs = [];
 
@@ -223,7 +218,7 @@
 
         let latlngs = [];
         points.forEach(xy => {
-          let unprojected = map.unproject(config.calculateMapCoordinate(xy.x, xy.y), 8);
+          let unprojected = getTmpMapLatLng(mapType, xy.x, xy.y);
           latlngs.push([unprojected.lat, unprojected.lng]);
           allLatlngs.push([unprojected.lat, unprojected.lng]);
         });

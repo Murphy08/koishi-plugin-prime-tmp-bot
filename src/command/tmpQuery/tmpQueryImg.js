@@ -125,7 +125,7 @@ module.exports = async (ctx, cfg, session, tmpId) => {
       `file:///${resolve(__dirname, "../../resource/query.html")}`,
     );
     await page.evaluate(`init(${JSON.stringify(data)})`);
-    await common.waitForPageRender(page);
+    await common.waitForPageRender(page, { readyFlag: data.isOnline ? '__tmpMapTilesReady' : null, timeoutMs: 20000 });
     const element = await page.$("#container");
     return segment.image(
       await element.screenshot({

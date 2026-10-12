@@ -109,7 +109,7 @@ async function renderImage (ctx, data) {
     await page.goto(pathToFileURL(resolve(__dirname, '../resource/footprint.html')).href)
     await page.evaluate(`init(${JSON.stringify(data)})`)
     await common.waitForPageRender(page, {
-      readyFlag: '__footprintReady',
+      readyFlag: '__tmpMapTilesReady',
       timeoutMs: 15000,
       settleMs: 100,
       allowReadyTimeout: true,

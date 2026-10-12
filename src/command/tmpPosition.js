@@ -113,7 +113,7 @@ async function renderImage (ctx, data) {
     await page.setViewport({ width: 720, height: 500, deviceScaleFactor: 1.5 })
     await page.goto(`file:///${resolve(__dirname, '../resource/position.html')}`)
     await page.evaluate(`setData(${JSON.stringify(data)})`)
-    await common.waitForPageRender(page)
+    await common.waitForPageRender(page, { readyFlag: '__tmpMapTilesReady', timeoutMs: 20000 })
     const element = await page.$('#container')
     return segment.image(
       await element.screenshot({

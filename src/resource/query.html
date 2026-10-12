@@ -6,6 +6,7 @@
   <link href="./package/leaflet/leaflet.min.css" rel="stylesheet">
   <link href="./package/prime-theme.css" rel="stylesheet">
   <script src="./package/leaflet/leaflet.min.js"></script>
+  <script src="./package/ets-map.js"></script>
   <style>
     @font-face {
       font-family: 'segui-emj';
@@ -395,59 +396,6 @@
   </div>
 
   <script>
-    let mapConfig = {
-      ets: {
-        tileUrl: 'https://ets-map.oss-cn-beijing.aliyuncs.com/ets2/05102019/{z}/{x}/{y}.png',
-        multipliers: {
-          x: 71282,
-          y: 56532
-        },
-        breakpoints: {
-          uk: {
-            x: -31056.8,
-            y: -5832.867
-          }
-        },
-        bounds: {
-          y: 131072,
-          x: 131072
-        },
-        maxZoom: 8,
-        minZoom: 2,
-        calculateMapCoordinate(x, y) {
-          return [
-            x / 1.609055 + mapConfig.ets.multipliers.x,
-            y / 1.609055 + mapConfig.ets.multipliers.y
-          ];
-        }
-      },
-      promods: {
-        tileUrl: 'https://ets-map.oss-cn-beijing.aliyuncs.com/promods/05102019/{z}/{x}/{y}.png',
-        multipliers: {
-          x: 51953,
-          y: 76024
-        },
-        breakpoints: {
-          uk: {
-            x: -31056.8,
-            y: -5832.867
-          }
-        },
-        bounds: {
-          y: 131072,
-          x: 131072
-        },
-        maxZoom: 8,
-        minZoom: 2,
-        calculateMapCoordinate(x, y) {
-          return [
-            x / 2.598541 + mapConfig.promods.multipliers.x,
-            y / 2.598541 + mapConfig.promods.multipliers.y
-          ];
-        }
-      }
-    };
-
     function formatMileage(value) {
       if (value === null || value === undefined || value === '') return '-';
       return `${Number(value).toLocaleString('en-US')} m`;
@@ -529,36 +477,23 @@
     function map(mapType, x, y) {
       let map = L.map('map', {
         attributionControl: false,
-        crs: L.CRS.Simple,
-        zoomControl: false
+        crs: createTmpMapCrs(mapType),
+        zoomControl: false,
+        minZoom: -3,
+        maxZoom: 3
       });
+      const bounds = getTmpMapBounds(mapType);
+      map.setMaxBounds(bounds);
 
-      let bounds = L.latLngBounds(
-        map.unproject([0, mapConfig[mapType].bounds.y], mapConfig[mapType].maxZoom),
-        map.unproject([mapConfig[mapType].bounds.x, 0], mapConfig[mapType].maxZoom)
-      );
+      const tileLayer = createTmpTileLayer(mapType, map);
+      markTmpMapReadyWhenTilesLoad(tileLayer);
+      tileLayer.addTo(map);
 
-      L.tileLayer(mapConfig[mapType].tileUrl, {
-        minZoom: 2,
-        maxZoom: 10,
-        maxNativeZoom: 8,
-        tileSize: 512,
-        bounds: bounds,
-        reuseTiles: true
-      }).addTo(map);
-
-      map.setMaxBounds(
-        new L.LatLngBounds(
-          map.unproject([0, mapConfig[mapType].bounds.y], mapConfig[mapType].maxZoom),
-          map.unproject([mapConfig[mapType].bounds.x, 0], mapConfig[mapType].maxZoom)
-        )
-      );
-
-      L.marker(map.unproject(mapConfig[mapType].calculateMapCoordinate(x, y), 8), {
+      L.marker(getTmpMapLatLng(mapType, x, y), {
         icon: L.divIcon({ className: '', iconSize: [24,24], iconAnchor: [12,12], html: `<div class="query-arrow" style="transform:rotate(${Number(window.__playerHeading || 0) * 180 / Math.PI}deg)"></div>` })
       }).addTo(map);
 
-      map.setView(map.unproject(mapConfig[mapType].calculateMapCoordinate(x, y), 8), 5);
+      map.setView(getTmpMapLatLng(mapType, x, y), 1);
     }
   </script>
 </body>
